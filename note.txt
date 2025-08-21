@@ -1,0 +1,16 @@
+GSAP animasi pada komponen heroSection
+Yang berubah:
+
+Penempatan div animasi jadi md:justify-end md:pr-10 → klaster geser ke kanan (tetap center di mobile).
+
+Posisi blok dihitung di area AREA_W × AREA_H dengan GAP antarelemen, pakai pengecekan overlap sehingga tidak saling berdempetan.
+
+Kamu bisa atur:
+
+GAP → jarak antar blok.
+
+AREA_W/AREA_H → seberapa lebar/tinggi sebarannya (biar isi sisi kanan lebih penuh).
+
+md:pr-10 → seberapa jauh geser ke kanan.
+
+Mau klasternya turun sedikit juga? Tambah md:pb-8 di wrapper yang sama atau tambahkan top offset global.
