@@ -33,7 +33,7 @@ export default function CustomNavbar() {
   const [activeId, setActiveId] = useState<string>("home");
   const obsRef = useRef<IntersectionObserver | null>(null);
 
-  // -------- Scroll state (blur) ----------
+  // -------- Scroll state (blur + hide text) ----------
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
@@ -163,12 +163,20 @@ export default function CustomNavbar() {
             <Image
               src="/ngodingin-512.png"
               alt="Ngodingin"
-              width={78}
-              height={78}
-              className="rounded-md"
+              width={scrolled ? 68 : 78} // ← INI yang ngatur ukuran
+              height={scrolled ? 68 : 78} // ← DAN INI
+              className={`rounded-md transition-all duration-500 ease-out ${
+                scrolled ? "scale-90" : "scale-100"
+              }`}
               priority
             />
-            <span className="text-xl font-bold tracking-tight text-white">
+            <span
+              className={`text-xl font-bold tracking-tight text-white transition-all duration-500 ease-out overflow-hidden whitespace-nowrap ${
+                scrolled
+                  ? "opacity-0 max-w-0 translate-x-[-10px]"
+                  : "opacity-100 max-w-[200px] translate-x-0"
+              }`}
+            >
               N
               <span className="bg-gradient-to-r from-brand-300 to-accent-300 bg-clip-text text-transparent">
                 godingin
