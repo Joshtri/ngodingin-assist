@@ -21,7 +21,6 @@ import {
 } from "@/data/landing";
 
 export default function DevAssistLanding() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
