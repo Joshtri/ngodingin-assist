@@ -1,11 +1,14 @@
 // components/sections/ServicesSection.tsx
 "use client";
 
-import { Card, CardHeader, CardBody } from "@heroui/react";
-import SectionWrapper from "@/components/common/SectionWrapper";
 import type { ElementType } from "react";
+
+import { Card, CardHeader, CardBody } from "@heroui/react";
+
 import GlowBlob from "../common/GlowBlob";
 import ParticleBackground from "../common/ParticleBackground";
+
+import SectionWrapper from "@/components/common/SectionWrapper";
 
 export type ServiceItem = {
   title: string;
@@ -30,45 +33,46 @@ export default function ServicesSection({
 }: ServicesSectionProps) {
   return (
     <SectionWrapper
+      descriptionClassName="text-gray-300"
       id={id}
       title={title}
+      titleClassName="text-white"
       description={description}
       // penting: bikin stacking context supaya z-index anak bekerja
       className={`relative z-0 ${className}`}
-      titleClassName="text-white"
-      descriptionClassName="text-gray-300"
     >
       {/* Glow paling belakang */}
       <div className="absolute inset-0 -z-20 pointer-events-none">
-        <GlowBlob position="top-right" size="lg" colorClass="bg-brand-600/15" />
+        <GlowBlob colorClass="bg-brand-600/15" position="top-right" size="lg" />
         <GlowBlob
+          colorClass="bg-accent-500/15"
           position="bottom-left"
           size="lg"
-          colorClass="bg-accent-500/15"
         />
       </div>
 
       {/* Particle background di atas glow, di bawah konten */}
       <ParticleBackground
         className="absolute inset-0 z-0 pointer-events-none"
-        variant="dark"
-        density={15}
-        speed={32}
         connectDistance={110}
-        cursorRadius={150}
         cursorForce={-28}
+        cursorRadius={150}
+        density={15}
         opacity={0.2}
+        speed={32}
+        variant="dark"
       />
 
       {/* grid cards */}
       <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {services.map((s, i) => {
           const Icon = s.icon as ElementType;
+
           return (
             <Card
               key={i}
-              isPressable
               disableRipple
+              isPressable
               className="
                 group rounded-2xl border border-brand-700/40 bg-surface-card shadow-md
                 transition-transform duration-300 transform-gpu hover:shadow-lg

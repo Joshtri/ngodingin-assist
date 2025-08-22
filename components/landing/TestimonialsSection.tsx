@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardBody, Avatar } from "@heroui/react";
 import { StarIcon } from "@heroicons/react/24/solid";
 import gsap from "gsap";
+
 import ParticleBackground from "../common/ParticleBackground";
 
 export type Testimonial = {
@@ -43,12 +44,15 @@ export default function TestimonialsSection({
 
   // ✅ deteksi mobile (≤ 767px)
   const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     const update = () => setIsMobile(mq.matches);
+
     update();
     mq.addEventListener("change", update);
     window.addEventListener("resize", update);
+
     return () => {
       mq.removeEventListener("change", update);
       window.removeEventListener("resize", update);
@@ -64,9 +68,10 @@ export default function TestimonialsSection({
   const setupMarquee = (
     element: HTMLElement,
     direction: "up" | "down",
-    pxPerSec: number
+    pxPerSec: number,
   ) => {
     const originalHTML = element.innerHTML;
+
     (element as any).__originalHTML = originalHTML;
     element.innerHTML = originalHTML + originalHTML;
 
@@ -99,11 +104,13 @@ export default function TestimonialsSection({
       },
       rebuild: () => {
         api.kill();
+
         return setupMarquee(element, direction, pxPerSec);
       },
       tween,
       batchHeight,
     };
+
     return api;
   };
 
@@ -118,7 +125,7 @@ export default function TestimonialsSection({
       (el) => {
         el.style.willChange = "transform";
         (el.style as any).transform = "translate3d(0,0,0)";
-      }
+      },
     );
 
     let m1 = setupMarquee(column1Ref.current, "up", speed * 1.0);
@@ -128,6 +135,7 @@ export default function TestimonialsSection({
     const ros: ResizeObserver[] = [];
     const rebuildThrottled = (() => {
       let raf = 0;
+
       return () => {
         if (raf) return;
         raf = requestAnimationFrame(() => {
@@ -142,9 +150,10 @@ export default function TestimonialsSection({
     [column1Ref.current, column2Ref.current, column3Ref.current].forEach(
       (el) => {
         const ro = new ResizeObserver(rebuildThrottled);
+
         ro.observe(el);
         ros.push(ro);
-      }
+      },
     );
 
     let resumeTimer: number | null = null;
@@ -164,6 +173,7 @@ export default function TestimonialsSection({
       if (resumeTimer) window.clearTimeout(resumeTimer);
       resumeTimer = window.setTimeout(resumeAll, 180);
     };
+
     if (pauseOnScroll) {
       window.addEventListener("wheel", onActivity, { passive: true });
       window.addEventListener("touchmove", onActivity, { passive: true });
@@ -171,10 +181,11 @@ export default function TestimonialsSection({
     }
 
     let io: IntersectionObserver | null = null;
+
     if (pauseWhenHidden && containerRef.current) {
       io = new IntersectionObserver(
         ([entry]) => (entry.isIntersecting ? resumeAll() : pauseAll()),
-        { threshold: 0.001, rootMargin: "200px 0px 200px 0px" }
+        { threshold: 0.001, rootMargin: "200px 0px 200px 0px" },
       );
       io.observe(containerRef.current);
     }
@@ -212,10 +223,10 @@ export default function TestimonialsSection({
       <CardBody className="p-0 h-full flex flex-col justify-between w-full">
         <div className="flex items-start gap-4 mb-3 w-full">
           <Avatar
-            src={t.avatarSrc}
-            name={t.name?.charAt(0)}
             className="bg-brand-100 text-brand-700 font-bold flex-shrink-0"
+            name={t.name?.charAt(0)}
             size="sm"
+            src={t.avatarSrc}
           />
           <div className="flex-1 min-w-0">
             <h4 className="font-semibold text-gray-300 text-sm truncate">
@@ -245,20 +256,20 @@ export default function TestimonialsSection({
 
   return (
     <section
-      id={id}
       className={`relative z-0 overflow-hidden py-20 px-4 ${className}`}
+      id={id}
     >
       {/* ❌ Matikan particle di mobile (hemat & bersih); ✅ tampilkan di desktop */}
       {!isMobile && (
         <ParticleBackground
           className="absolute inset-0 -z-10 pointer-events-none"
-          variant="dark"
-          density={18}
-          speed={34}
           connectDistance={110}
-          cursorRadius={150}
           cursorForce={-30}
+          cursorRadius={150}
+          density={18}
           opacity={0.12}
+          speed={34}
+          variant="dark"
         />
       )}
 

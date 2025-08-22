@@ -49,7 +49,8 @@ export default function ParticleBackground({
     const ctx = canvas.getContext("2d", { alpha: true })!;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    let width = 0, height = 0;
+    let width = 0,
+      height = 0;
     let particles: P[] = [];
     let raf = 0;
     let lastT = 0;
@@ -57,22 +58,30 @@ export default function ParticleBackground({
 
     // warna berdasarkan tema (bisa dioverride via prop color)
     const dotCol =
-      color ?? (variant === "dark" ? "rgba(255,255,255,0.9)" : "rgba(17,24,39,0.9)");
+      color ??
+      (variant === "dark" ? "rgba(255,255,255,0.9)" : "rgba(17,24,39,0.9)");
     const lineCol =
-      color ?? (variant === "dark" ? "rgba(255,255,255,0.85)" : "rgba(17,24,39,0.85)");
+      color ??
+      (variant === "dark" ? "rgba(255,255,255,0.85)" : "rgba(17,24,39,0.85)");
     const cursorLineCol =
-      color ?? (variant === "dark" ? "rgba(255,255,255,0.7)" : "rgba(17,24,39,0.7)");
+      color ??
+      (variant === "dark" ? "rgba(255,255,255,0.7)" : "rgba(17,24,39,0.7)");
 
     // cursor (global window listener agar tetap terbaca walau pointer-events-none)
     const mouse = { x: NaN, y: NaN, active: false };
 
-    const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefersReduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
-    const rand = (min: number, max: number) => Math.random() * (max - min) + min;
-    const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+    const rand = (min: number, max: number) =>
+      Math.random() * (max - min) + min;
+    const clamp = (v: number, a: number, b: number) =>
+      Math.max(a, Math.min(b, v));
 
     function resize() {
       const rect = container.getBoundingClientRect();
+
       width = Math.max(1, Math.floor(rect.width));
       height = Math.max(1, Math.floor(rect.height));
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -91,10 +100,12 @@ export default function ParticleBackground({
       const count = clamp(target, 12, 240);
 
       const arr: P[] = [];
+
       for (let i = 0; i < count; i++) {
         const r = rand(sizeRange[0], sizeRange[1]);
         const angle = Math.random() * Math.PI * 2;
         const v = (rand(0.6, 1.4) * speed) / 60; // px/frame ~60fps
+
         arr.push({
           x: rand(0, width),
           y: rand(0, height),
@@ -106,13 +117,22 @@ export default function ParticleBackground({
       particles = arr;
     }
 
-    function drawLine(x1: number, y1: number, x2: number, y2: number, maxDist: number, stroke: string) {
+    function drawLine(
+      x1: number,
+      y1: number,
+      x2: number,
+      y2: number,
+      maxDist: number,
+      stroke: string,
+    ) {
       const dx = x1 - x2;
       const dy = y1 - y2;
       const d2 = dx * dx + dy * dy;
       const m2 = maxDist * maxDist;
+
       if (d2 > m2) return;
       const alpha = (1 - d2 / m2) * 0.9;
+
       ctx.globalAlpha = alpha * opacity;
       ctx.beginPath();
       ctx.moveTo(x1, y1);
@@ -126,6 +146,7 @@ export default function ParticleBackground({
       if (!running) return;
       raf = requestAnimationFrame(step);
       const dt = lastT ? clamp((ts - lastT) / 16.67, 0.5, 1.5) : 1; // normalisasi vs 60fps
+
       lastT = ts;
 
       ctx.clearRect(0, 0, width, height);
@@ -134,7 +155,11 @@ export default function ParticleBackground({
       ctx.globalAlpha = opacity;
 
       const hasCursor =
-        mouse.active && !Number.isNaN(mouse.x) && !Number.isNaN(mouse.y) && cursorRadius > 0 && cursorForce !== 0;
+        mouse.active &&
+        !Number.isNaN(mouse.x) &&
+        !Number.isNaN(mouse.y) &&
+        cursorRadius > 0 &&
+        cursorForce !== 0;
 
       // update & draw dots
       for (let i = 0; i < particles.length; i++) {
@@ -145,11 +170,13 @@ export default function ParticleBackground({
           const dy = p.y - mouse.y;
           const d2 = dx * dx + dy * dy;
           const r = cursorRadius;
+
           if (d2 > 0.0001 && d2 < r * r) {
             const d = Math.sqrt(d2);
             const nx = dx / d;
             const ny = dy / d;
             const strength = (1 - d / r) * (cursorForce / 60); // per frame
+
             p.vx += nx * strength;
             p.vy += ny * strength;
           }
@@ -177,13 +204,27 @@ export default function ParticleBackground({
       if (connectDistance > 0) {
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
-            drawLine(particles[i].x, particles[i].y, particles[j].x, particles[j].y, connectDistance, lineCol);
+            drawLine(
+              particles[i].x,
+              particles[i].y,
+              particles[j].x,
+              particles[j].y,
+              connectDistance,
+              lineCol,
+            );
           }
         }
         // garis ke kursor (tipis)
         if (hasCursor) {
           for (let i = 0; i < particles.length; i++) {
-            drawLine(particles[i].x, particles[i].y, mouse.x, mouse.y, connectDistance * 0.8, cursorLineCol);
+            drawLine(
+              particles[i].x,
+              particles[i].y,
+              mouse.x,
+              mouse.y,
+              connectDistance * 0.8,
+              cursorLineCol,
+            );
           }
         }
       }
@@ -192,6 +233,7 @@ export default function ParticleBackground({
     // pointer pakai window → selalu kebaca
     const onPointerMove = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
+
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
       mouse.active = true;
@@ -204,12 +246,14 @@ export default function ParticleBackground({
 
     // resize observer
     const ro = new ResizeObserver(resize);
+
     ro.observe(container);
 
     // pause ketika offscreen
     const io = new IntersectionObserver(
       ([entry]) => {
         const shouldRun = entry.isIntersecting && !prefersReduce;
+
         if (shouldRun) {
           running = true;
           lastT = 0;
@@ -219,8 +263,9 @@ export default function ParticleBackground({
           cancelAnimationFrame(raf);
         }
       },
-      { threshold: 0.01 }
+      { threshold: 0.01 },
     );
+
     io.observe(container);
 
     // init
@@ -254,7 +299,7 @@ export default function ParticleBackground({
   ]);
 
   return (
-    <div ref={containerRef} className={className} aria-hidden>
+    <div ref={containerRef} aria-hidden className={className}>
       <canvas ref={canvasRef} />
     </div>
   );

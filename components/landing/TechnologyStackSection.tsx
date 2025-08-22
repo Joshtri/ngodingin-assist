@@ -1,12 +1,15 @@
 "use client";
 
 import type React from "react";
+
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
-import SectionWrapper from "@/components/common/SectionWrapper";
+
 import GlowBlob from "../common/GlowBlob";
 import { GridBackground } from "../common/GridBackground";
+
+import SectionWrapper from "@/components/common/SectionWrapper";
 
 type Technology = {
   name: string;
@@ -64,11 +67,11 @@ const TechnologyStackSection: React.FC<Props> = ({ technologies }) => {
         <div className="p-4 rounded-xl bg-surface-card shadow-card transition-transform duration-300 group-hover:scale-105">
           {"icon" in tech && tech.icon && (
             <svg
-              role="img"
-              viewBox="0 0 24 24"
               aria-label={tech.name}
               className="w-12 h-12"
+              role="img"
               style={{ color: `#${getIconColor(tech.name, tech.icon.hex)}` }}
+              viewBox="0 0 24 24"
             >
               <title>{tech.name}</title>
               <path d={tech.icon.path} fill="currentColor" />
@@ -77,12 +80,12 @@ const TechnologyStackSection: React.FC<Props> = ({ technologies }) => {
 
           {"local" in tech && tech.local && (
             <Image
-              src={tech.local}
-              alt={tech.name}
-              width={48}
-              height={48}
-              className="w-12 h-12 object-contain"
               unoptimized
+              alt={tech.name}
+              className="w-12 h-12 object-contain"
+              height={48}
+              src={tech.local}
+              width={48}
             />
           )}
 
@@ -99,24 +102,24 @@ const TechnologyStackSection: React.FC<Props> = ({ technologies }) => {
 
   return (
     <SectionWrapper
-      id="tech"
       className="relative bg-surface py-20 overflow-hidden"
+      id="tech"
     >
       <GridBackground
-        size={50}
         majorEvery={3}
-        minorOpacity={0.07}
         majorOpacity={0.16}
+        minorOpacity={0.07}
+        size={50}
       />
       {/* glow lembut pakai token */}
       <GlowBlob
-        position="top-right"
         colorClass="bg-brand-600/20"
+        position="top-right"
         size="h-80 w-80"
       />
       <GlowBlob
-        position="bottom-left"
         colorClass="bg-accent-500/20"
+        position="bottom-left"
         size="h-72 w-72"
       />
       {/* <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-600/15 blur-3xl" />

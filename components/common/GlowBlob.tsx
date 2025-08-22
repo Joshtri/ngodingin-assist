@@ -22,10 +22,10 @@ export default function GlowBlob({
     position === "top-right"
       ? "-top-28 -right-24"
       : position === "bottom-left"
-      ? "-bottom-28 -left-24"
-      : position === "top-left"
-      ? "-top-28 -left-24"
-      : "-bottom-28 -right-24";
+        ? "-bottom-28 -left-24"
+        : position === "top-left"
+          ? "-top-28 -left-24"
+          : "-bottom-28 -right-24";
 
   return (
     <div

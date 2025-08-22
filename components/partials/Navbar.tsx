@@ -36,15 +36,17 @@ export default function CustomNavbar() {
   // -------- Scroll state (blur + hide text) ----------
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // -------- Active link by section in-view ----------
   const sectionIds = useMemo(
     () => navItems.map((n) => n.href.replace("#", "")),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -68,6 +70,7 @@ export default function CustomNavbar() {
 
         if (visible[0]) {
           const id = visible[0].target.id;
+
           setActiveId(id);
         }
       },
@@ -75,7 +78,7 @@ export default function CustomNavbar() {
         root: null,
         threshold: [0.1, 0.25, 0.5, 0.75],
         rootMargin: `${-NAV_HEIGHT * 0.8}px 0px ${-window.innerHeight * 0.45}px 0px`,
-      }
+      },
     );
 
     sections.forEach((sec) => observer.observe(sec));
@@ -94,6 +97,7 @@ export default function CustomNavbar() {
 
     const id = href.replace("#", "");
     const el = document.getElementById(id);
+
     if (!el) return;
 
     e.preventDefault();
@@ -107,12 +111,14 @@ export default function CustomNavbar() {
           el.getBoundingClientRect().top +
           window.pageYOffset -
           (NAV_HEIGHT + 8);
+
         window.scrollTo({ top, behavior: "smooth" });
       }, 200);
     } else {
       // Desktop → langsung scroll
       const top =
         el.getBoundingClientRect().top + window.pageYOffset - (NAV_HEIGHT + 8);
+
       window.scrollTo({ top, behavior: "smooth" });
     }
   };
@@ -139,15 +145,15 @@ export default function CustomNavbar() {
 
   return (
     <Navbar
-      onMenuOpenChange={setIsMenuOpen}
-      isMenuOpen={isMenuOpen} // ← make it controlled
-      maxWidth="full"
-      isBlurred={false}
       className="fixed top-0 z-50 w-full !shadow-none"
       classNames={{
         base: "!bg-transparent",
         wrapper: wrapperCls,
       }}
+      isBlurred={false}
+      isMenuOpen={isMenuOpen} // ← make it controlled
+      maxWidth="full"
+      onMenuOpenChange={setIsMenuOpen}
     >
       <NavbarContent className="gap-3">
         <NavbarMenuToggle
@@ -156,19 +162,19 @@ export default function CustomNavbar() {
         />
         <NavbarBrand>
           <Link
-            href="#home"
             className="flex items-center gap-2 group"
+            href="#home"
             onClick={handleNavClick("#home")}
           >
             <Image
-              src="/ngodingin-512.png"
+              priority
               alt="Ngodingin"
-              width={scrolled ? 68 : 78} // ← INI yang ngatur ukuran
-              height={scrolled ? 68 : 78} // ← DAN INI
               className={`rounded-md transition-all duration-500 ease-out ${
                 scrolled ? "scale-90" : "scale-100"
               }`}
-              priority
+              height={scrolled ? 68 : 78} // ← DAN INI
+              src="/ngodingin-512.png"
+              width={scrolled ? 68 : 78} // ← INI yang ngatur ukuran
             />
             <span
               className={`text-xl font-bold tracking-tight text-white transition-all duration-500 ease-out overflow-hidden whitespace-nowrap ${
@@ -190,14 +196,15 @@ export default function CustomNavbar() {
         {navItems.map((item) => {
           const id = item.href.replace("#", "");
           const isActive = activeId === id;
+
           return (
             <NavbarItem key={item.href}>
               <Link
+                aria-current={isActive ? "page" : undefined}
+                className={`${baseLink} ${isActive ? activeLink : ""}`}
+                data-active={isActive ? "true" : "false"}
                 href={item.href}
                 onClick={handleNavClick(item.href)}
-                className={`${baseLink} ${isActive ? activeLink : ""}`}
-                aria-current={isActive ? "page" : undefined}
-                data-active={isActive ? "true" : "false"}
               >
                 {item.label}
               </Link>
@@ -206,26 +213,27 @@ export default function CustomNavbar() {
         })}
       </NavbarContent>
 
-      <NavbarContent justify="end" className="hidden sm:flex" />
+      <NavbarContent className="hidden sm:flex" justify="end" />
 
       {/* Mobile menu */}
       <NavbarMenu className="px-4 bg-gradient-to-b from-brand-900 to-surface text-text border-t border-white/10">
         {navItems.map((item) => {
           const id = item.href.replace("#", "");
           const isActive = activeId === id;
+
           return (
             <NavbarMenuItem key={item.href}>
               <Link
+                aria-current={isActive ? "page" : undefined}
+                className={`w-full py-2 transition-colors ${
+                  isActive ? "text-brand-300" : "text-text hover:text-brand-300"
+                }`}
+                data-active={isActive ? "true" : "false"}
                 href={item.href}
                 onClick={(e) => {
                   handleNavClick(item.href)(e); // Scroll jalan
                   setIsMenuOpen(false); // Tutup menu langsung
                 }}
-                className={`w-full py-2 transition-colors ${
-                  isActive ? "text-brand-300" : "text-text hover:text-brand-300"
-                }`}
-                aria-current={isActive ? "page" : undefined}
-                data-active={isActive ? "true" : "false"}
               >
                 {item.label}
               </Link>
