@@ -18,6 +18,7 @@ import { GridBackground } from "../common/GridBackground";
 
 import SectionWrapper from "@/components/common/SectionWrapper";
 import GlowBlob from "@/components/common/GlowBlob";
+import BrandIcon from "@/components/common/BrandIcon";
 
 type Variant = "light" | "dark";
 
@@ -48,6 +49,13 @@ type Channel = {
   href: string;
   copyValue?: string;
   icon: ElementType;
+  brandIcon?:
+    | "whatsapp"
+    | "instagram"
+    | "telegram"
+    | "gmail"
+    | "phone"
+    | "location";
   accentClass: string; // ring/bg aksen
 };
 
@@ -112,6 +120,7 @@ export default function ContactSection({
         href: `https://wa.me/${num}?text=${text}`,
         copyValue: `+${num}`,
         icon: ChatBubbleLeftRightIcon,
+        brandIcon: "whatsapp",
         accentClass: isDark
           ? "ring-emerald-500/50 bg-emerald-500/10"
           : "ring-emerald-200 bg-emerald-50",
@@ -142,6 +151,7 @@ export default function ContactSection({
         href: `mailto:${email}`,
         copyValue: email,
         icon: EnvelopeIcon,
+        brandIcon: "gmail",
         accentClass: isDark
           ? "ring-brand-500/50 bg-brand-500/10"
           : "ring-brand-200 bg-brand-50",
@@ -158,6 +168,7 @@ export default function ContactSection({
         href: `https://t.me/${user}`,
         copyValue: `@${user}`,
         icon: PaperAirplaneIcon,
+        brandIcon: "telegram",
         accentClass: isDark
           ? "ring-indigo-500/50 bg-indigo-500/10"
           : "ring-indigo-200 bg-indigo-50",
@@ -173,7 +184,8 @@ export default function ContactSection({
         subtitle: `@${ig}`,
         href: `https://instagram.com/${ig}`,
         copyValue: `@${ig}`,
-        icon: PaperAirplaneIcon, // kalau mau ganti ke ikon IG custom, silakan
+        icon: PaperAirplaneIcon, // fallback
+        brandIcon: "instagram",
         accentClass: isDark
           ? "ring-pink-500/50 bg-pink-500/10"
           : "ring-pink-200 bg-pink-50",
@@ -258,7 +270,15 @@ export default function ContactSection({
                       ch.accentClass,
                     ].join(" ")}
                   >
-                    <Icon className="h-6 w-6" />
+                    {ch.brandIcon ? (
+                      <BrandIcon
+                        className="h-6 w-6"
+                        icon={ch.brandIcon}
+                        size={24}
+                      />
+                    ) : (
+                      <Icon className="h-6 w-6" />
+                    )}
                   </div>
                   <div className="min-w-0">
                     <h3

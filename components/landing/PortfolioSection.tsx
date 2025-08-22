@@ -58,6 +58,8 @@ export default function PortfolioSection({
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const isDraggingRef = useRef(false);
+  const dragVelocityRef = useRef(0);
 
   // gandakan konten biar loop-nya seamless
   const doubled = useMemo(() => [...items, ...items], [items]);
@@ -114,6 +116,134 @@ export default function PortfolioSection({
       tweenRef.current = null;
     };
   }, [items, speedPxPerSec]);
+
+  // Add drag functionality
+  useEffect(() => {
+    const track = trackRef.current;
+    const viewport = viewportRef.current;
+
+    if (!track || !viewport) return;
+
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    let animationId: number;
+
+    const handleStart = (clientX: number) => {
+      isDragging = true;
+      isDraggingRef.current = true;
+      startX = clientX;
+      currentX = gsap.getProperty(track, "x") as number;
+
+      // Pause auto-scroll when dragging
+      tweenRef.current?.pause();
+
+      // Cancel any momentum animation
+      if (animationId) cancelAnimationFrame(animationId);
+
+      dragVelocityRef.current = 0;
+    };
+
+    const handleMove = (clientX: number) => {
+      if (!isDragging) return;
+
+      const deltaX = clientX - startX;
+      const newX = currentX + deltaX;
+
+      // Apply the drag with momentum feel
+      gsap.set(track, { x: newX });
+
+      // Calculate velocity for momentum
+      dragVelocityRef.current = deltaX * 0.1;
+    };
+
+    const handleEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      // Add momentum effect
+      const momentum = dragVelocityRef.current;
+
+      if (Math.abs(momentum) > 1) {
+        const currentPos = gsap.getProperty(track, "x") as number;
+
+        gsap.to(track, {
+          x: currentPos + momentum * 50,
+          duration: 0.8,
+          ease: "power2.out",
+          onComplete: () => {
+            isDraggingRef.current = false;
+            // Resume auto-scroll after momentum ends
+            setTimeout(() => tweenRef.current?.resume(), 500);
+          },
+        });
+      } else {
+        isDraggingRef.current = false;
+        // Resume auto-scroll immediately if no momentum
+        setTimeout(() => tweenRef.current?.resume(), 300);
+      }
+    };
+
+    // Mouse events
+    const handleMouseDown = (e: MouseEvent) => {
+      e.preventDefault();
+      handleStart(e.clientX);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      e.preventDefault();
+      handleMove(e.clientX);
+    };
+
+    const handleMouseUp = () => {
+      handleEnd();
+    };
+
+    // Touch events
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        handleStart(e.touches[0].clientX);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        e.preventDefault();
+        handleMove(e.touches[0].clientX);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      handleEnd();
+    };
+
+    // Add event listeners
+    viewport.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    viewport.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    viewport.addEventListener("touchmove", handleTouchMove, { passive: false });
+    viewport.addEventListener("touchend", handleTouchEnd);
+
+    // Prevent default drag behavior
+    viewport.style.userSelect = "none";
+    track.style.userSelect = "none";
+
+    return () => {
+      viewport.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+
+      viewport.removeEventListener("touchstart", handleTouchStart);
+      viewport.removeEventListener("touchmove", handleTouchMove);
+      viewport.removeEventListener("touchend", handleTouchEnd);
+
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  }, []);
 
   const CardInner = (item: PortfolioItem, index: number) => {
     const baseIdx = index % items.length;
@@ -226,7 +356,7 @@ export default function PortfolioSection({
           {/* TRACK bergerak (GSAP) */}
           <div
             ref={trackRef}
-            className="flex gap-6 items-stretch snap-x snap-mandatory will-change-transform pb-2"
+            className="flex gap-6 items-stretch snap-x snap-mandatory will-change-transform pb-2 cursor-grab active:cursor-grabbing"
           >
             {doubled.map((item, i) => CardInner(item, i))}
           </div>
