@@ -64,6 +64,14 @@ export default function DevAssistLanding() {
       {/* Pricing Section */}
       <PricingSection
         className="bg-gradient-to-r from-surface-soft via-brand-900 to-surface"
+        contactMethods={{
+          whatsapp: {
+            number: "0852-9838-9192",
+            prefilledText:
+              "Halo! Saya tertarik untuk konsultasi terkait paket yang ditawarkan.",
+          },
+          email: "ngodingin@protonmail.com",
+        }}
         plans={pricingPlans}
         variant="dark"
       />

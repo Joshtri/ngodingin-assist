@@ -1,6 +1,7 @@
 // components/sections/PricingSection.tsx
 "use client";
 
+import { useState } from "react";
 import { Button, Card, CardBody, CardHeader, Chip } from "@heroui/react";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -8,6 +9,7 @@ import { GridBackground } from "../common/GridBackground";
 
 import SectionWrapper from "@/components/common/SectionWrapper";
 import GlowBlob from "@/components/common/GlowBlob";
+import ContactSelectionModal from "@/components/common/ContactSelectionModal";
 
 export type PricingPlan = {
   name: string;
@@ -33,6 +35,12 @@ type PricingSectionProps = {
   titleClassName?: string;
   descriptionClassName?: string;
   onSelectPlan?: (plan: PricingPlan) => void;
+  contactMethods?: {
+    whatsapp?: { number: string; prefilledText?: string };
+    phone?: string;
+    email?: string;
+    telegram?: string;
+  };
 };
 
 export default function PricingSection({
@@ -46,7 +54,19 @@ export default function PricingSection({
   titleClassName,
   descriptionClassName,
   onSelectPlan,
+  contactMethods,
 }: PricingSectionProps) {
+  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePlanSelect = (plan: PricingPlan) => {
+    if (contactMethods && Object.keys(contactMethods).length > 0) {
+      setSelectedPlan(plan);
+      setIsModalOpen(true);
+    } else {
+      onSelectPlan?.(plan);
+    }
+  };
   const isDark = variant === "dark";
 
   const cardBase = isDark
@@ -212,7 +232,7 @@ export default function PricingSection({
                         : "bg-brand-100 text-brand-700 hover:bg-brand-200"
                     }
                     size="lg"
-                    onPress={() => onSelectPlan?.(plan)}
+                    onPress={() => handlePlanSelect(plan)}
                   >
                     {plan.ctaLabel ?? "Pilih Paket Ini"}
                   </Button>
@@ -222,6 +242,19 @@ export default function PricingSection({
           );
         })}
       </div>
+
+      {/* Contact Selection Modal */}
+      {selectedPlan && contactMethods && (
+        <ContactSelectionModal
+          contactMethods={contactMethods}
+          isOpen={isModalOpen}
+          packageName={selectedPlan.name}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedPlan(null);
+          }}
+        />
+      )}
     </SectionWrapper>
   );
 }
