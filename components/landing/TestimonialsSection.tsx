@@ -4,7 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardBody, Avatar } from "@heroui/react";
 import { StarIcon } from "@heroicons/react/24/solid";
 import gsap from "gsap";
+
 import ParticleBackground from "../common/ParticleBackground";
+import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 export type Testimonial = {
   name: string;
@@ -43,12 +45,15 @@ export default function TestimonialsSection({
 
   // ✅ deteksi mobile (≤ 767px)
   const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     const update = () => setIsMobile(mq.matches);
+
     update();
     mq.addEventListener("change", update);
     window.addEventListener("resize", update);
+
     return () => {
       mq.removeEventListener("change", update);
       window.removeEventListener("resize", update);
@@ -67,6 +72,7 @@ export default function TestimonialsSection({
     pxPerSec: number
   ) => {
     const originalHTML = element.innerHTML;
+
     (element as any).__originalHTML = originalHTML;
     element.innerHTML = originalHTML + originalHTML;
 
@@ -99,11 +105,13 @@ export default function TestimonialsSection({
       },
       rebuild: () => {
         api.kill();
+
         return setupMarquee(element, direction, pxPerSec);
       },
       tween,
       batchHeight,
     };
+
     return api;
   };
 
@@ -128,6 +136,7 @@ export default function TestimonialsSection({
     const ros: ResizeObserver[] = [];
     const rebuildThrottled = (() => {
       let raf = 0;
+
       return () => {
         if (raf) return;
         raf = requestAnimationFrame(() => {
@@ -142,6 +151,7 @@ export default function TestimonialsSection({
     [column1Ref.current, column2Ref.current, column3Ref.current].forEach(
       (el) => {
         const ro = new ResizeObserver(rebuildThrottled);
+
         ro.observe(el);
         ros.push(ro);
       }
@@ -164,6 +174,7 @@ export default function TestimonialsSection({
       if (resumeTimer) window.clearTimeout(resumeTimer);
       resumeTimer = window.setTimeout(resumeAll, 180);
     };
+
     if (pauseOnScroll) {
       window.addEventListener("wheel", onActivity, { passive: true });
       window.addEventListener("touchmove", onActivity, { passive: true });
@@ -171,6 +182,7 @@ export default function TestimonialsSection({
     }
 
     let io: IntersectionObserver | null = null;
+
     if (pauseWhenHidden && containerRef.current) {
       io = new IntersectionObserver(
         ([entry]) => (entry.isIntersecting ? resumeAll() : pauseAll()),
@@ -212,10 +224,10 @@ export default function TestimonialsSection({
       <CardBody className="p-0 h-full flex flex-col justify-between w-full">
         <div className="flex items-start gap-4 mb-3 w-full">
           <Avatar
-            src={t.avatarSrc}
-            name={t.name?.charAt(0)}
             className="bg-brand-100 text-brand-700 font-bold flex-shrink-0"
+            name={t.name?.charAt(0)}
             size="sm"
+            src={t.avatarSrc}
           />
           <div className="flex-1 min-w-0">
             <h4 className="font-semibold text-gray-300 text-sm truncate">
@@ -245,64 +257,85 @@ export default function TestimonialsSection({
 
   return (
     <section
-      id={id}
       className={`relative z-0 overflow-hidden py-20 px-4 ${className}`}
+      id={id}
     >
       {/* ❌ Matikan particle di mobile (hemat & bersih); ✅ tampilkan di desktop */}
       {!isMobile && (
         <ParticleBackground
           className="absolute inset-0 -z-10 pointer-events-none"
-          variant="dark"
-          density={18}
-          speed={34}
           connectDistance={110}
-          cursorRadius={150}
           cursorForce={-30}
+          cursorRadius={150}
+          density={18}
           opacity={0.12}
+          speed={34}
+          variant="dark"
         />
       )}
 
       <div className="max-w-7xl mx-auto relative">
-        <div className="text-center mb-16">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-wide text-white">
-            {title}
-          </h2>
-          {description && (
-            <p className="text-gray-200 max-w-2xl mx-auto">{description}</p>
-          )}
-        </div>
+        <AnimationTransitionWrapper
+          animation="fade"
+          duration={0.8}
+          delay={0.2}
+          threshold={0.1}
+        >
+          <div className="text-center mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-wide text-white">
+              {title}
+            </h2>
+            {description && (
+              <p className="text-gray-200 max-w-2xl mx-auto">{description}</p>
+            )}
+          </div>
+        </AnimationTransitionWrapper>
 
         {/* ✅ MOBILE: list biasa, tanpa marquee, bebas scroll */}
         {isMobile ? (
-          <div className="grid grid-cols-1 gap-4">
-            {items.map((t, i) => renderCard(t, i))}
-          </div>
+          <AnimationTransitionWrapper
+            animation="slideUp"
+            duration={0.6}
+            staggerDelay={0.1}
+            threshold={0.05}
+          >
+            <div className="grid grid-cols-1 gap-4">
+              {items.map((t, i) => renderCard(t, i))}
+            </div>
+          </AnimationTransitionWrapper>
         ) : (
           // ✅ DESKTOP: 3 kolom marquee + masks + fixed height
-          <div
-            ref={containerRef}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px] overflow-hidden relative"
+          <AnimationTransitionWrapper
+            animation="fade"
+            duration={0.6}
+            staggerDelay={0.1}
+            threshold={0.05}
           >
-            {/* masks */}
-            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/80 via-black/50 to-transparent z-10 pointer-events-none" />
-            <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10 pointer-events-none" />
+            <div
+              ref={containerRef}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px] overflow-hidden relative"
+            >
+              {/* masks */}
+              <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/80 via-black/50 to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10 pointer-events-none" />
 
-            <div className="relative overflow-hidden w-full">
-              <div ref={column1Ref} className="space-y-6 w-full">
-                {col1.map((t, i) => renderCard(t, i))}
+              <div className="relative overflow-hidden w-full">
+                <div ref={column1Ref} className="space-y-6 w-full">
+                  {col1.map((t, i) => renderCard(t, i))}
+                </div>
+              </div>
+              <div className="relative overflow-hidden w-full">
+                <div ref={column2Ref} className="space-y-6 w-full">
+                  {col2.map((t, i) => renderCard(t, i))}
+                </div>
+              </div>
+              <div className="relative overflow-hidden w-full">
+                <div ref={column3Ref} className="space-y-6 w-full">
+                  {col3.map((t, i) => renderCard(t, i))}
+                </div>
               </div>
             </div>
-            <div className="relative overflow-hidden w-full">
-              <div ref={column2Ref} className="space-y-6 w-full">
-                {col2.map((t, i) => renderCard(t, i))}
-              </div>
-            </div>
-            <div className="relative overflow-hidden w-full">
-              <div ref={column3Ref} className="space-y-6 w-full">
-                {col3.map((t, i) => renderCard(t, i))}
-              </div>
-            </div>
-          </div>
+          </AnimationTransitionWrapper>
         )}
       </div>
     </section>
