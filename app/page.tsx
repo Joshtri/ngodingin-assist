@@ -14,18 +14,22 @@ import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import {
   portfolioItems,
   pricingPlans,
+  productItems,
   services,
   teamMembers,
   technologies,
   testimonials,
 } from "@/data/landing";
+import ProductSection from "@/components/landing/ProductSection";
 
 export default function DevAssistLanding() {
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
+
     window.addEventListener("scroll", handleScroll);
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -41,46 +45,49 @@ export default function DevAssistLanding() {
       <TechnologyStackSection technologies={technologies} />
       {/* Portfolio Section */}
       <PortfolioSection
-        items={portfolioItems}
-        variant="dark"
         description="Beberapa aplikasi yang telah kami kembangkan untuk tugas akhir mahasiswa."
+        items={portfolioItems}
         title="Portfolio Kami"
+        variant="dark"
         className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
         // optional: override judul/desc kalau mau beda
         // title="Portfolio Kami"
         // description="Beberapa aplikasi ..."
       />
+
+      <ProductSection items={productItems} />
+
       {/* Team Section */}
       <TeamSection
-        id="team"
-        variant="dark"
         className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
-        titleClassName="text-white"
         descriptionClassName="text-gray-300"
+        id="team"
         members={teamMembers}
+        titleClassName="text-white"
+        variant="dark"
       />
       {/* Pricing Section */}
       <PricingSection
-        variant="dark"
         className="bg-gradient-to-r from-surface-soft via-brand-900 to-surface"
         plans={pricingPlans}
+        variant="dark"
       />
       {/* Testimonials */}
       <TestimonialsSection
-        items={testimonials}
         className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
+        items={testimonials}
       />
 
       <ContactSection
-        variant="dark"
-        className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
         showGlow
+        className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
+        email="ngodingin@protonmail.com"
+        instagram="ngodingin-assist"
+        variant="dark"
         whatsapp={{
           number: "0852-9838-9192",
           prefilledText: "Halo, saya butuh bantuan untuk ngoding sistem 🙌",
         }}
-        email="ngodingin@protonmail.com"
-        instagram="ngodingin-assist"
       />
 
       {/* CTA Section */}
