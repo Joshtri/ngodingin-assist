@@ -2,9 +2,10 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { Button, Badge } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { ArrowRightIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { gsap } from "gsap";
+
 import { GridBackground } from "../common/GridBackground";
 
 const NAV_HEIGHT = 72; // kira2 tinggi navbar untuk offset scroll
@@ -54,11 +55,13 @@ export default function HeroSection() {
   // ---------- Smooth scroll helper ----------
   const smoothScrollTo = (targetId: string, extraOffset = 8) => {
     const el = document.getElementById(targetId);
+
     if (!el) return;
     const top =
       el.getBoundingClientRect().top +
       window.pageYOffset -
       (NAV_HEIGHT + extraOffset);
+
     window.scrollTo({ top, behavior: "smooth" });
   };
 
@@ -83,7 +86,7 @@ export default function HeroSection() {
     const isOverlap = (
       a: { x: number; y: number; w: number; h: number },
       b: { x: number; y: number; w: number; h: number },
-      gap: number
+      gap: number,
     ) =>
       !(
         a.x + a.w + gap <= b.x ||
@@ -99,10 +102,12 @@ export default function HeroSection() {
       let x = 0,
         y = 0,
         ok = false;
+
       for (let t = 0; t < 300 && !ok; t++) {
         x = r(0, Math.max(1, AREA_W - w));
         y = r(0, Math.max(1, AREA_H - h));
         const c = { x, y, w, h };
+
         ok = rects.every((ex) => !isOverlap(c, ex, GAP));
       }
       rects.push({ x, y, w, h });
@@ -145,14 +150,16 @@ export default function HeroSection() {
     if (!isDesktop) return; // Skip animations on mobile
 
     const reduceMotion = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     )?.matches;
+
     if (reduceMotion) return;
 
     const ctx = gsap.context(() => {
       blocksRef.current.forEach((el, idx) => {
         if (!el) return;
         const c = blocks[idx];
+
         if (!c) return;
 
         gsap.set(el, {
@@ -186,6 +193,7 @@ export default function HeroSection() {
           delay: c.op.delay,
           paused: true,
         });
+
         tweensRef.current.push(t1, t2);
       });
 
@@ -206,9 +214,11 @@ export default function HeroSection() {
         const resume = () => tweensRef.current.forEach((t) => t.resume());
         const io = new IntersectionObserver(
           ([e]) => (e.isIntersecting ? resume() : pause()),
-          { threshold: 0.01, rootMargin: "-20% 0px -20% 0px" }
+          { threshold: 0.01, rootMargin: "-20% 0px -20% 0px" },
         );
+
         io.observe(containerRef.current);
+
         return () => io.disconnect();
       }
     }, containerRef);
@@ -223,8 +233,9 @@ export default function HeroSection() {
   // ==== TIMELINE TEKS ====
   useLayoutEffect(() => {
     const reduceMotion = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     )?.matches;
+
     if (reduceMotion) return;
 
     const ctx = gsap.context(() => {
@@ -239,7 +250,7 @@ export default function HeroSection() {
         .from(
           ".hero-subtitle",
           { autoAlpha: 0, y: 18, duration: 0.55, ease: "power3.out" },
-          "-=0.25"
+          "-=0.25",
         )
         .from(
           ".hero-ctas > *",
@@ -250,7 +261,7 @@ export default function HeroSection() {
             ease: "power2.out",
             stagger: 0.08,
           },
-          "-=0.15"
+          "-=0.15",
         )
         .from(
           ".hero-microcopy li",
@@ -261,12 +272,12 @@ export default function HeroSection() {
             ease: "power2.out",
             stagger: 0.04,
           },
-          "-=0.2"
+          "-=0.2",
         )
         .from(
           ".hero-badge",
           { autoAlpha: 0, y: -10, duration: 0.4, ease: "power2.out" },
-          "-=0.2"
+          "-=0.2",
         )
         .add(() => {
           // Animasi kartu hanya jalan di desktop
@@ -283,9 +294,11 @@ export default function HeroSection() {
               tl.play(0);
             }
           },
-          { threshold: 0.35 }
+          { threshold: 0.35 },
         );
+
         io.observe(heroRef.current);
+
         return () => io.disconnect();
       }
     }, heroRef);
@@ -301,17 +314,17 @@ export default function HeroSection() {
 
   return (
     <section
-      id="home"
       ref={heroRef}
       className="relative min-h-[80svh] md:min-h-screen flex items-center text-white overflow-hidden
                  bg-gradient-to-br from-brand-900 via-brand-700 to-surface"
+      id="home"
     >
-      <div className="absolute inset-0 bg-black/25" aria-hidden />
+      <div aria-hidden className="absolute inset-0 bg-black/25" />
       <GridBackground
-        size={36}
         majorEvery={5}
-        minorOpacity={0.07}
         majorOpacity={0.16}
+        minorOpacity={0.07}
+        size={36}
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 w-full">
@@ -345,9 +358,9 @@ export default function HeroSection() {
                 }}
               >
                 <Button
-                  size="lg"
                   className="bg-white text-brand-700 hover:bg-brand-50"
                   endContent={<ArrowRightIcon className="w-4 h-4" />}
+                  size="lg"
                 >
                   Minta Ngodingin Sekarang
                 </Button>
@@ -362,10 +375,10 @@ export default function HeroSection() {
                 }}
               >
                 <Button
-                  size="lg"
-                  variant="bordered"
                   className="border-white text-white hover:bg-white/10 bg-transparent"
+                  size="lg"
                   startContent={<PlayIcon className="w-4 h-4" />}
+                  variant="bordered"
                 >
                   Lihat Portofolio
                 </Button>
@@ -381,7 +394,7 @@ export default function HeroSection() {
 
           {/* Right: Animated Blocks - Hanya tampil di desktop */}
           {isDesktop && (
-            <div className="relative h-[500px] lg:h-[600px]" ref={containerRef}>
+            <div ref={containerRef} className="relative h-[500px] lg:h-[600px]">
               <div className="absolute inset-0 flex items-center justify-center md:justify-end md:pr-10">
                 <div className="relative w-full h-full max-w-lg">
                   {blocks.map((b) => (
