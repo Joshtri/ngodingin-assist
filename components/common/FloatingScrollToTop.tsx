@@ -24,6 +24,7 @@ export default function FloatingScrollToTop() {
         document.documentElement;
       const max = Math.max(1, scrollHeight - clientHeight);
       const p = Math.min(1, Math.max(0, scrollTop / max));
+
       setProgress(p);
       if (ringRef.current) {
         gsap.to(ringRef.current, {
@@ -40,8 +41,10 @@ export default function FloatingScrollToTop() {
     }
     update();
     const onScroll = () => requestAnimationFrame(update);
+
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
@@ -69,18 +72,18 @@ export default function FloatingScrollToTop() {
       <div className="relative">
         {/* RING PROGRESS – selalu terlihat, di ATAS tombol */}
         <svg
-          width={SIZE}
+          aria-hidden
+          className="absolute -inset-[4px] m-auto rotate-[-90deg] pointer-events-none z-20 !opacity-100"
           height={SIZE}
           viewBox={`0 0 ${SIZE} ${SIZE}`}
-          className="absolute -inset-[4px] m-auto rotate-[-90deg] pointer-events-none z-20 !opacity-100"
-          aria-hidden
+          width={SIZE}
         >
           {/* track tipis */}
           <circle
             cx={SIZE / 2}
             cy={SIZE / 2}
-            r={R}
             fill="none"
+            r={R}
             stroke="white"
             strokeOpacity={0.25}
             strokeWidth={STROKE}
@@ -90,25 +93,25 @@ export default function FloatingScrollToTop() {
             ref={ringRef}
             cx={SIZE / 2}
             cy={SIZE / 2}
-            r={R}
             fill="none"
+            r={R}
             stroke="white"
-            strokeWidth={STROKE}
             strokeLinecap="round"
+            strokeWidth={STROKE}
           />
         </svg>
 
         {/* Tombol – tanpa efek hover sama sekali */}
         <Button
           isIconOnly
-          radius="full"
-          onPress={toTop}
           aria-label="Scroll ke atas"
-          role="progressbar"
-          aria-valuemin={0}
           aria-valuemax={100}
+          aria-valuemin={0}
           aria-valuenow={Math.round(progress * 100)}
           className="relative z-10 w-14 h-14 bg-brand-600 text-white shadow-lg active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+          radius="full"
+          role="progressbar"
+          onPress={toTop}
         >
           <ChevronUpIcon className="h-6 w-6" />
         </Button>

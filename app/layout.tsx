@@ -9,6 +9,7 @@ import CustomNavbar from "@/components/partials/Navbar";
 import { fontSans } from "@/config/fonts";
 // import { Navbar } from "@/components/partials/Navbar";
 import FloatingScrollToTop from "@/components/common/FloatingScrollToTop";
+import FloatingWhatsAppHelper from "@/components/common/FloatingWhatsAppHelper";
 
 export const metadata: Metadata = {
   title: "Ngodingin",
@@ -38,13 +39,17 @@ export default function RootLayout({
       <body
         className={clsx(
           "min-h-screen text-foreground bg-background font-san   antialiased",
-          fontSans.variable
+          fontSans.variable,
         )}
       >
         <Providers>
           <div className="relative flex flex-col min-h-screen">
             <CustomNavbar />
             <FloatingScrollToTop /> {/* muncul di semua page */}
+            <FloatingWhatsAppHelper
+              prefilledText="Halo! Saya tertarik untuk konsultasi."
+              whatsappNumber="0852-9838-9192"
+            />
             <main className="flex-grow pt-16">{children}</main>
             <Footer />
           </div>

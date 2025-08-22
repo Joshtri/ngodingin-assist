@@ -1,12 +1,15 @@
 // components/sections/PricingSection.tsx
 "use client";
 
+import { useState } from "react";
 import { Button, Card, CardBody, CardHeader, Chip } from "@heroui/react";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+
+import { GridBackground } from "../common/GridBackground";
+
 import SectionWrapper from "@/components/common/SectionWrapper";
 import GlowBlob from "@/components/common/GlowBlob";
-import ParticleBackground from "../common/ParticleBackground";
-import { GridBackground } from "../common/GridBackground";
+import ContactSelectionModal from "@/components/common/ContactSelectionModal";
 
 export type PricingPlan = {
   name: string;
@@ -32,6 +35,12 @@ type PricingSectionProps = {
   titleClassName?: string;
   descriptionClassName?: string;
   onSelectPlan?: (plan: PricingPlan) => void;
+  contactMethods?: {
+    whatsapp?: { number: string; prefilledText?: string };
+    phone?: string;
+    email?: string;
+    telegram?: string;
+  };
 };
 
 export default function PricingSection({
@@ -45,7 +54,19 @@ export default function PricingSection({
   titleClassName,
   descriptionClassName,
   onSelectPlan,
+  contactMethods,
 }: PricingSectionProps) {
+  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePlanSelect = (plan: PricingPlan) => {
+    if (contactMethods && Object.keys(contactMethods).length > 0) {
+      setSelectedPlan(plan);
+      setIsModalOpen(true);
+    } else {
+      onSelectPlan?.(plan);
+    }
+  };
   const isDark = variant === "dark";
 
   const cardBase = isDark
@@ -63,25 +84,25 @@ export default function PricingSection({
 
   return (
     <SectionWrapper
+      descriptionClassName={sectionDescCls}
       id={id}
       title={title}
+      titleClassName={sectionTitleCls}
       description={description}
       // ✅ penting: bikin stacking context di parent
       className={`relative z-0 ${className}`}
-      titleClassName={sectionTitleCls}
-      descriptionClassName={sectionDescCls}
     >
       {/* Glow paling belakang */}
       {showGlow && (
         <div className="absolute inset-0 -z-10 pointer-events-none">
           <GlowBlob
-            position="top-right"
             colorClass="bg-brand-500/20"
+            position="top-right"
             size="h-[18rem] w-[18rem]"
           />
           <GlowBlob
-            position="bottom-left"
             colorClass="bg-accent-500/15"
+            position="bottom-left"
             size="h-[18rem] w-[18rem]"
           />
         </div>
@@ -98,12 +119,12 @@ export default function PricingSection({
         cursorForce={-30}
         opacity={isDark ? 0.3 : 0.75}
       /> */}
-      
+
       <GridBackground
-        size={50}
         majorEvery={3}
-        minorOpacity={0.07}
         majorOpacity={0.16}
+        minorOpacity={0.07}
+        size={50}
       />
 
       {/* Konten di atas particle (DOM order menang) */}
@@ -114,8 +135,8 @@ export default function PricingSection({
           return (
             <Card
               key={i}
-              isPressable
               disableRipple
+              isPressable
               className={[
                 "relative flex h-full rounded-2xl shadow-card transition-transform duration-300 transform-gpu",
                 "data-[hover=true]:-translate-y-2 data-[pressed=true]:scale-[0.985]",
@@ -130,10 +151,10 @@ export default function PricingSection({
             >
               {popular && (
                 <Chip
-                  variant="solid"
+                  className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white px-3 py-1 font-semibold shadow pointer-events-none z-10"
                   radius="full"
                   size="sm"
-                  className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white px-3 py-1 font-semibold shadow pointer-events-none z-10"
+                  variant="solid"
                 >
                   POPULER
                 </Chip>
@@ -183,20 +204,20 @@ export default function PricingSection({
 
                 {plan.ctaHref ? (
                   <a
-                    href={plan.ctaHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="block"
+                    href={plan.ctaHref}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <Button
                       fullWidth
-                      size="lg"
+                      aria-label={`Pilih ${plan.name}`}
                       className={
                         popular
                           ? "bg-brand-600 hover:bg-brand-700 text-white"
                           : "bg-brand-100 text-brand-700 hover:bg-brand-200"
                       }
-                      aria-label={`Pilih ${plan.name}`}
+                      size="lg"
                     >
                       {plan.ctaLabel ?? "Pilih Paket Ini"}
                     </Button>
@@ -204,14 +225,14 @@ export default function PricingSection({
                 ) : (
                   <Button
                     fullWidth
-                    size="lg"
+                    aria-label={`Pilih ${plan.name}`}
                     className={
                       popular
                         ? "bg-brand-600 hover:bg-brand-700 text-white"
                         : "bg-brand-100 text-brand-700 hover:bg-brand-200"
                     }
-                    onPress={() => onSelectPlan?.(plan)}
-                    aria-label={`Pilih ${plan.name}`}
+                    size="lg"
+                    onPress={() => handlePlanSelect(plan)}
                   >
                     {plan.ctaLabel ?? "Pilih Paket Ini"}
                   </Button>
@@ -221,6 +242,19 @@ export default function PricingSection({
           );
         })}
       </div>
+
+      {/* Contact Selection Modal */}
+      {selectedPlan && contactMethods && (
+        <ContactSelectionModal
+          contactMethods={contactMethods}
+          isOpen={isModalOpen}
+          packageName={selectedPlan.name}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedPlan(null);
+          }}
+        />
+      )}
     </SectionWrapper>
   );
 }

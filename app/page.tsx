@@ -25,7 +25,9 @@ export default function DevAssistLanding() {
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
+
     window.addEventListener("scroll", handleScroll);
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -41,10 +43,10 @@ export default function DevAssistLanding() {
       <TechnologyStackSection technologies={technologies} />
       {/* Portfolio Section */}
       <PortfolioSection
-        items={portfolioItems}
-        variant="dark"
         description="Beberapa aplikasi yang telah kami kembangkan untuk tugas akhir mahasiswa."
+        items={portfolioItems}
         title="Portfolio Kami"
+        variant="dark"
         className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
         // optional: override judul/desc kalau mau beda
         // title="Portfolio Kami"
@@ -52,35 +54,43 @@ export default function DevAssistLanding() {
       />
       {/* Team Section */}
       <TeamSection
-        id="team"
-        variant="dark"
         className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
-        titleClassName="text-white"
         descriptionClassName="text-gray-300"
+        id="team"
         members={teamMembers}
+        titleClassName="text-white"
+        variant="dark"
       />
       {/* Pricing Section */}
       <PricingSection
-        variant="dark"
         className="bg-gradient-to-r from-surface-soft via-brand-900 to-surface"
+        contactMethods={{
+          whatsapp: {
+            number: "0852-9838-9192",
+            prefilledText:
+              "Halo! Saya tertarik untuk konsultasi terkait paket yang ditawarkan.",
+          },
+          email: "ngodingin@protonmail.com",
+        }}
         plans={pricingPlans}
+        variant="dark"
       />
       {/* Testimonials */}
       <TestimonialsSection
-        items={testimonials}
         className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
+        items={testimonials}
       />
 
       <ContactSection
-        variant="dark"
-        className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
         showGlow
+        className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
+        email="ngodingin@protonmail.com"
+        instagram="ngodingin-assist"
+        variant="dark"
         whatsapp={{
           number: "0852-9838-9192",
           prefilledText: "Halo, saya butuh bantuan untuk ngoding sistem 🙌",
         }}
-        email="ngodingin@protonmail.com"
-        instagram="ngodingin-assist"
       />
 
       {/* CTA Section */}

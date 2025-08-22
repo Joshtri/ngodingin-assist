@@ -18,10 +18,9 @@ export type SocialKeys =
   | "portfolio";
 
 export type TechItem =
-  | { name: string; icon: SimpleIcon }   // untuk simple-icons
-  | { name: string; local: string }      // untuk file lokal SVG
-  | { name: string; initials: string };  // untuk fallback monogram
-
+  | { name: string; icon: SimpleIcon } // untuk simple-icons
+  | { name: string; local: string } // untuk file lokal SVG
+  | { name: string; initials: string }; // untuk fallback monogram
 
 export type TeamMember = {
   name: string;

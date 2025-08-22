@@ -5,10 +5,12 @@ import { useEffect, useMemo, useRef } from "react";
 import { Card, CardBody, CardHeader, Chip } from "@heroui/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import SectionWrapper from "@/components/common/SectionWrapper";
-import GlowBlob from "../common/GlowBlob";
 import gsap from "gsap";
+
+import GlowBlob from "../common/GlowBlob";
 import { GridBackground } from "../common/GridBackground";
+
+import SectionWrapper from "@/components/common/SectionWrapper";
 
 export type PortfolioItem = {
   title: string;
@@ -56,19 +58,24 @@ export default function PortfolioSection({
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const isDraggingRef = useRef(false);
+  const dragVelocityRef = useRef(0);
 
   // gandakan konten biar loop-nya seamless
   const doubled = useMemo(() => [...items, ...items], [items]);
 
   useEffect(() => {
     const el = trackRef.current;
+
     if (!el) return;
 
     const setup = () => {
       const batchWidth = Math.round(el.scrollWidth / 2);
+
       if (!batchWidth) return;
 
       const wrapX = gsap.utils.wrap(-batchWidth, 0);
+
       gsap.set(el, { x: 0, force3D: true, willChange: "transform" });
       tweenRef.current?.kill();
       tweenRef.current = gsap.to(el, {
@@ -83,21 +90,24 @@ export default function PortfolioSection({
     };
 
     const ro = new ResizeObserver(setup);
+
     ro.observe(el);
 
     let io: IntersectionObserver | null = null;
+
     if (viewportRef.current) {
       io = new IntersectionObserver(
         ([e]) =>
           e.isIntersecting
             ? tweenRef.current?.resume()
             : tweenRef.current?.pause(),
-        { threshold: 0.01, rootMargin: "200px 0px 200px 0px" }
+        { threshold: 0.01, rootMargin: "200px 0px 200px 0px" },
       );
       io.observe(viewportRef.current);
     }
 
     const t = setTimeout(setup, 0);
+
     return () => {
       clearTimeout(t);
       ro.disconnect();
@@ -106,6 +116,134 @@ export default function PortfolioSection({
       tweenRef.current = null;
     };
   }, [items, speedPxPerSec]);
+
+  // Add drag functionality
+  useEffect(() => {
+    const track = trackRef.current;
+    const viewport = viewportRef.current;
+
+    if (!track || !viewport) return;
+
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    let animationId: number;
+
+    const handleStart = (clientX: number) => {
+      isDragging = true;
+      isDraggingRef.current = true;
+      startX = clientX;
+      currentX = gsap.getProperty(track, "x") as number;
+
+      // Pause auto-scroll when dragging
+      tweenRef.current?.pause();
+
+      // Cancel any momentum animation
+      if (animationId) cancelAnimationFrame(animationId);
+
+      dragVelocityRef.current = 0;
+    };
+
+    const handleMove = (clientX: number) => {
+      if (!isDragging) return;
+
+      const deltaX = clientX - startX;
+      const newX = currentX + deltaX;
+
+      // Apply the drag with momentum feel
+      gsap.set(track, { x: newX });
+
+      // Calculate velocity for momentum
+      dragVelocityRef.current = deltaX * 0.1;
+    };
+
+    const handleEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      // Add momentum effect
+      const momentum = dragVelocityRef.current;
+
+      if (Math.abs(momentum) > 1) {
+        const currentPos = gsap.getProperty(track, "x") as number;
+
+        gsap.to(track, {
+          x: currentPos + momentum * 50,
+          duration: 0.8,
+          ease: "power2.out",
+          onComplete: () => {
+            isDraggingRef.current = false;
+            // Resume auto-scroll after momentum ends
+            setTimeout(() => tweenRef.current?.resume(), 500);
+          },
+        });
+      } else {
+        isDraggingRef.current = false;
+        // Resume auto-scroll immediately if no momentum
+        setTimeout(() => tweenRef.current?.resume(), 300);
+      }
+    };
+
+    // Mouse events
+    const handleMouseDown = (e: MouseEvent) => {
+      e.preventDefault();
+      handleStart(e.clientX);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      e.preventDefault();
+      handleMove(e.clientX);
+    };
+
+    const handleMouseUp = () => {
+      handleEnd();
+    };
+
+    // Touch events
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        handleStart(e.touches[0].clientX);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        e.preventDefault();
+        handleMove(e.touches[0].clientX);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      handleEnd();
+    };
+
+    // Add event listeners
+    viewport.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    viewport.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    viewport.addEventListener("touchmove", handleTouchMove, { passive: false });
+    viewport.addEventListener("touchend", handleTouchEnd);
+
+    // Prevent default drag behavior
+    viewport.style.userSelect = "none";
+    track.style.userSelect = "none";
+
+    return () => {
+      viewport.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+
+      viewport.removeEventListener("touchstart", handleTouchStart);
+      viewport.removeEventListener("touchmove", handleTouchMove);
+      viewport.removeEventListener("touchend", handleTouchEnd);
+
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  }, []);
 
   const CardInner = (item: PortfolioItem, index: number) => {
     const baseIdx = index % items.length;
@@ -117,11 +255,11 @@ export default function PortfolioSection({
         <CardHeader className="p-0">
           <div className="relative overflow-hidden w-full">
             <Image
-              src={item.image || "/placeholder.svg"}
               alt={item.title}
-              width={800}
-              height={480}
               className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+              height={480}
+              src={item.image || "/placeholder.svg"}
+              width={800}
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
           </div>
@@ -141,10 +279,10 @@ export default function PortfolioSection({
             {item.tags.map((tag, tagIndex) => (
               <Chip
                 key={tagIndex}
-                size="sm"
-                radius="full"
-                variant="flat"
                 className={chipClass}
+                radius="full"
+                size="sm"
+                variant="flat"
               >
                 {tag}
               </Chip>
@@ -156,10 +294,10 @@ export default function PortfolioSection({
 
     const content = item.href ? (
       <a
-        href={item.href}
-        target="_blank"
-        rel="noopener noreferrer"
         className="block"
+        href={item.href}
+        rel="noopener noreferrer"
+        target="_blank"
       >
         {body}
       </a>
@@ -170,10 +308,10 @@ export default function PortfolioSection({
     return (
       <motion.div
         key={`${item.title}-${index}`}
-        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, delay: 0.06 * baseIdx }}
         className="flex-shrink-0 snap-start w-[75vw] sm:w-[360px] md:w-[400px] lg:w-[440px]"
+        initial={{ opacity: 0, y: 16 }}
+        transition={{ duration: 0.45, delay: 0.06 * baseIdx }}
       >
         {content}
       </motion.div>
@@ -182,20 +320,20 @@ export default function PortfolioSection({
 
   return (
     <SectionWrapper
+      className={`relative ${className}`}
+      description={description}
+      descriptionClassName={isDark ? "text-gray-300" : "text-gray-600"}
       id={id}
       title={title}
-      description={description}
-      className={`relative ${className}`}
       titleClassName={isDark ? "text-white" : "text-gray-900"}
-      descriptionClassName={isDark ? "text-gray-300" : "text-gray-600"}
     >
-      <GlowBlob position="top-right" colorClass="bg-brand-600/10" />
-      <GlowBlob position="bottom-left" colorClass="bg-brand-800/10" />
+      <GlowBlob colorClass="bg-brand-600/10" position="top-right" />
+      <GlowBlob colorClass="bg-brand-800/10" position="bottom-left" />
       <GridBackground
-        size={50}
         majorEvery={3}
-        minorOpacity={0.05}
         majorOpacity={0.07}
+        minorOpacity={0.05}
+        size={50}
       />
       {/* FULL-BLEED VIEWPORT (lebar penuh layar) */}
       <div
@@ -218,7 +356,7 @@ export default function PortfolioSection({
           {/* TRACK bergerak (GSAP) */}
           <div
             ref={trackRef}
-            className="flex gap-6 items-stretch snap-x snap-mandatory will-change-transform pb-2"
+            className="flex gap-6 items-stretch snap-x snap-mandatory will-change-transform pb-2 cursor-grab active:cursor-grabbing"
           >
             {doubled.map((item, i) => CardInner(item, i))}
           </div>

@@ -1,8 +1,9 @@
 // components/sections/ContactSection.tsx
 "use client";
 
-import { useMemo, useState } from "react";
 import type { ElementType } from "react";
+
+import { useMemo, useState } from "react";
 import { Card, CardBody, CardHeader, Button, Chip } from "@heroui/react";
 import {
   PhoneIcon,
@@ -12,10 +13,12 @@ import {
   MapPinIcon,
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/outline";
-import SectionWrapper from "@/components/common/SectionWrapper";
-import ParticleBackground from "@/components/common/ParticleBackground";
-import GlowBlob from "@/components/common/GlowBlob";
+
 import { GridBackground } from "../common/GridBackground";
+
+import SectionWrapper from "@/components/common/SectionWrapper";
+import GlowBlob from "@/components/common/GlowBlob";
+import BrandIcon from "@/components/common/BrandIcon";
 
 type Variant = "light" | "dark";
 
@@ -46,15 +49,24 @@ type Channel = {
   href: string;
   copyValue?: string;
   icon: ElementType;
+  brandIcon?:
+    | "whatsapp"
+    | "instagram"
+    | "telegram"
+    | "gmail"
+    | "phone"
+    | "location";
   accentClass: string; // ring/bg aksen
 };
 
 function normalizeIDPhone(raw: string) {
   // hapus spasi, tanda dll
   let x = (raw || "").replace(/[^\d+]/g, "");
+
   // +62... → 62..., 08... → 62...
   if (x.startsWith("+")) x = x.slice(1);
   if (x.startsWith("0")) x = "62" + x.slice(1);
+
   return x;
 }
 
@@ -98,8 +110,9 @@ export default function ContactSection({
       const num = normalizeIDPhone(whatsapp.number);
       const text = encodeURIComponent(
         whatsapp.prefilledText ??
-          "Halo! Saya tertarik untuk konsultasi terkait tugas akhir."
+          "Halo! Saya tertarik untuk konsultasi terkait tugas akhir.",
       );
+
       list.push({
         key: "whatsapp",
         label: whatsapp.label ?? "WhatsApp",
@@ -107,6 +120,7 @@ export default function ContactSection({
         href: `https://wa.me/${num}?text=${text}`,
         copyValue: `+${num}`,
         icon: ChatBubbleLeftRightIcon,
+        brandIcon: "whatsapp",
         accentClass: isDark
           ? "ring-emerald-500/50 bg-emerald-500/10"
           : "ring-emerald-200 bg-emerald-50",
@@ -115,6 +129,7 @@ export default function ContactSection({
 
     if (phone) {
       const num = normalizeIDPhone(phone);
+
       list.push({
         key: "phone",
         label: "Telepon",
@@ -136,6 +151,7 @@ export default function ContactSection({
         href: `mailto:${email}`,
         copyValue: email,
         icon: EnvelopeIcon,
+        brandIcon: "gmail",
         accentClass: isDark
           ? "ring-brand-500/50 bg-brand-500/10"
           : "ring-brand-200 bg-brand-50",
@@ -144,6 +160,7 @@ export default function ContactSection({
 
     if (telegram) {
       const user = telegram.replace(/^@/, "");
+
       list.push({
         key: "telegram",
         label: "Telegram",
@@ -151,6 +168,7 @@ export default function ContactSection({
         href: `https://t.me/${user}`,
         copyValue: `@${user}`,
         icon: PaperAirplaneIcon,
+        brandIcon: "telegram",
         accentClass: isDark
           ? "ring-indigo-500/50 bg-indigo-500/10"
           : "ring-indigo-200 bg-indigo-50",
@@ -159,13 +177,15 @@ export default function ContactSection({
 
     if (instagram) {
       const ig = instagram.replace(/^@/, "");
+
       list.push({
         key: "instagram",
         label: "Instagram",
         subtitle: `@${ig}`,
         href: `https://instagram.com/${ig}`,
         copyValue: `@${ig}`,
-        icon: PaperAirplaneIcon, // kalau mau ganti ke ikon IG custom, silakan
+        icon: PaperAirplaneIcon, // fallback
+        brandIcon: "instagram",
         accentClass: isDark
           ? "ring-pink-500/50 bg-pink-500/10"
           : "ring-pink-200 bg-pink-50",
@@ -178,7 +198,7 @@ export default function ContactSection({
         label: "Lokasi",
         subtitle: location,
         href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-          location
+          location,
         )}`,
         icon: MapPinIcon,
         accentClass: isDark
@@ -192,34 +212,34 @@ export default function ContactSection({
 
   return (
     <SectionWrapper
+      className={`relative z-0 ${className}`}
+      description={description}
+      descriptionClassName={descCls}
       id={id}
       title={title}
-      description={description}
-      className={`relative z-0 ${className}`}
       titleClassName={titleCls}
-      descriptionClassName={descCls}
     >
       {/* dekorasi opsional */}
       {showGlow && (
         <div className="absolute inset-0 -z-20 pointer-events-none">
           <GlowBlob
-            position="top-right"
             colorClass="bg-brand-500/20"
+            position="top-right"
             size="h-[18rem] w-[18rem]"
           />
           <GlowBlob
-            position="bottom-left"
             colorClass="bg-accent-500/15"
+            position="bottom-left"
             size="h-[18rem] w-[18rem]"
           />
         </div>
       )}
 
       <GridBackground
-        size={50}
         majorEvery={3}
-        minorOpacity={0.07}
         majorOpacity={0.16}
+        minorOpacity={0.07}
+        size={50}
       />
 
       {/* grid kanal */}
@@ -227,11 +247,12 @@ export default function ContactSection({
         {channels.map((ch) => {
           const Icon = ch.icon;
           const isCopied = copied === ch.key;
+
           return (
             <Card
               key={ch.key}
-              isPressable
               disableRipple
+              isPressable
               className={[
                 "relative h-full rounded-2xl shadow-card transition-transform duration-300 transform-gpu",
                 "data-[hover=true]:-translate-y-2 data-[pressed=true]:scale-[0.985]",
@@ -249,7 +270,15 @@ export default function ContactSection({
                       ch.accentClass,
                     ].join(" ")}
                   >
-                    <Icon className="h-6 w-6" />
+                    {ch.brandIcon ? (
+                      <BrandIcon
+                        className="h-6 w-6"
+                        icon={ch.brandIcon}
+                        size={24}
+                      />
+                    ) : (
+                      <Icon className="h-6 w-6" />
+                    )}
                   </div>
                   <div className="min-w-0">
                     <h3
@@ -279,10 +308,10 @@ export default function ContactSection({
               <CardBody className="pt-2">
                 <div className="flex gap-3">
                   <a
-                    href={ch.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="flex-1"
+                    href={ch.href}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <Button
                       fullWidth
@@ -308,10 +337,10 @@ export default function ContactSection({
                 {isCopied && (
                   <div className="pt-3">
                     <Chip
-                      size="sm"
-                      radius="full"
-                      variant="flat"
                       className="bg-emerald-100 text-emerald-700"
+                      radius="full"
+                      size="sm"
+                      variant="flat"
                     >
                       Disalin!
                     </Chip>

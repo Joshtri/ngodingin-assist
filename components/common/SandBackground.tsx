@@ -67,7 +67,7 @@ export default function SandBackground({
 
     const mouse = { x: NaN, y: NaN, active: false };
     const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
 
     const rand = (a: number, b: number) => Math.random() * (b - a) + a;
@@ -76,6 +76,7 @@ export default function SandBackground({
 
     function resize() {
       const r = wrap.getBoundingClientRect();
+
       W = Math.max(1, Math.floor(r.width));
       H = Math.max(1, Math.floor(r.height));
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -94,8 +95,10 @@ export default function SandBackground({
       const perLayer = Math.max(8, Math.round(total / Math.max(1, layers)));
 
       const arr: Grain[] = [];
+
       for (let l = 0; l < layers; l++) {
         const layerScale = 1 + l * 0.35; // lapisan belakang → jatuh sedikit lebih cepat & sedikit lebih besar
+
         for (let i = 0; i < perLayer; i++) {
           arr.push({
             x: rand(0, W),
@@ -116,6 +119,7 @@ export default function SandBackground({
       if (!running) return;
       raf = requestAnimationFrame(step);
       const dt = last ? clamp((ts - last) / 16.67, 0.5, 1.5) : 1;
+
       last = ts;
 
       ctx.clearRect(0, 0, W, H);
@@ -140,9 +144,11 @@ export default function SandBackground({
           const dx = g.x - mouse.x;
           const dy = g.y - mouse.y;
           const d2 = dx * dx + dy * dy;
+
           if (d2 < pushR * pushR) {
             const d = Math.sqrt(d2) || 1;
             const s = ((pushR - d) / pushR) * (cursorPush / 60);
+
             vx += (dx / d) * s; // dorong kiri/kanan relatif ke kursor
           }
         }
@@ -162,6 +168,7 @@ export default function SandBackground({
         // gambar butir (pakai rect kecil untuk performa)
         // untuk ukuran > 1.2 terlihat bulat; sisanya kecil seperti “grain”
         const s = g.size;
+
         ctx.beginPath();
         if (s <= 1.2) {
           ctx.fillRect(g.x, g.y, 1, 1);
@@ -175,6 +182,7 @@ export default function SandBackground({
     // cursor pakai window supaya tetap terbaca meski pointer-events:none
     const onPointerMove = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
+
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
       mouse.active = true;
@@ -186,11 +194,13 @@ export default function SandBackground({
     };
 
     const ro = new ResizeObserver(resize);
+
     ro.observe(wrap);
 
     const io = new IntersectionObserver(
       ([entry]) => {
         const shouldRun = entry.isIntersecting && !reduced;
+
         if (shouldRun) {
           running = true;
           last = 0;
@@ -200,8 +210,9 @@ export default function SandBackground({
           cancelAnimationFrame(raf);
         }
       },
-      { threshold: 0.01 }
+      { threshold: 0.01 },
     );
+
     io.observe(wrap);
 
     // init
@@ -247,7 +258,7 @@ export default function SandBackground({
   ]);
 
   return (
-    <div ref={wrapRef} className={className} aria-hidden>
+    <div ref={wrapRef} aria-hidden className={className}>
       <canvas ref={canvasRef} />
     </div>
   );
