@@ -7,15 +7,14 @@ import { Card, CardBody, CardHeader, Button, Chip } from "@heroui/react";
 import {
   PhoneIcon,
   EnvelopeIcon,
-  PaperAirplaneIcon,
-  ChatBubbleLeftRightIcon,
   MapPinIcon,
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/outline";
 import SectionWrapper from "@/components/common/SectionWrapper";
-import ParticleBackground from "@/components/common/ParticleBackground";
 import GlowBlob from "@/components/common/GlowBlob";
 import { GridBackground } from "../common/GridBackground";
+import { siWhatsapp, siTelegram, siInstagram } from "simple-icons";
+import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 type Variant = "light" | "dark";
 
@@ -45,7 +44,7 @@ type Channel = {
   subtitle?: string;
   href: string;
   copyValue?: string;
-  icon: ElementType;
+  icon: ElementType | React.FC<React.SVGProps<SVGSVGElement>>;
   accentClass: string; // ring/bg aksen
 };
 
@@ -57,6 +56,28 @@ function normalizeIDPhone(raw: string) {
   if (x.startsWith("0")) x = "62" + x.slice(1);
   return x;
 }
+
+// Helper component to render Simple Icons consistently
+const SimpleIconWrapper = ({
+  icon,
+  size = 24,
+  className = "",
+}: {
+  icon: any;
+  size?: number;
+  className?: string;
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      dangerouslySetInnerHTML={{ __html: icon.svg }}
+    />
+  );
+};
 
 export default function ContactSection({
   id = "contact",
@@ -80,6 +101,7 @@ export default function ContactSection({
 
   const titleCls = isDark ? "text-white" : "text-gray-900";
   const descCls = isDark ? "text-gray-300" : "text-gray-600";
+  const iconCls = isDark ? "text-white" : "text-inherit";
 
   const [copied, setCopied] = useState<string | null>(null);
   const copy = async (key: string, value?: string) => {
@@ -106,7 +128,7 @@ export default function ContactSection({
         subtitle: `+${num}`,
         href: `https://wa.me/${num}?text=${text}`,
         copyValue: `+${num}`,
-        icon: ChatBubbleLeftRightIcon,
+        icon: (props) => <SimpleIconWrapper icon={siWhatsapp} {...props} />,
         accentClass: isDark
           ? "ring-emerald-500/50 bg-emerald-500/10"
           : "ring-emerald-200 bg-emerald-50",
@@ -150,7 +172,7 @@ export default function ContactSection({
         subtitle: `@${user}`,
         href: `https://t.me/${user}`,
         copyValue: `@${user}`,
-        icon: PaperAirplaneIcon,
+        icon: (props) => <SimpleIconWrapper icon={siTelegram} {...props} />,
         accentClass: isDark
           ? "ring-indigo-500/50 bg-indigo-500/10"
           : "ring-indigo-200 bg-indigo-50",
@@ -165,7 +187,7 @@ export default function ContactSection({
         subtitle: `@${ig}`,
         href: `https://instagram.com/${ig}`,
         copyValue: `@${ig}`,
-        icon: PaperAirplaneIcon, // kalau mau ganti ke ikon IG custom, silakan
+        icon: (props) => <SimpleIconWrapper icon={siInstagram} {...props} />,
         accentClass: isDark
           ? "ring-pink-500/50 bg-pink-500/10"
           : "ring-pink-200 bg-pink-50",
@@ -227,6 +249,7 @@ export default function ContactSection({
         {channels.map((ch) => {
           const Icon = ch.icon;
           const isCopied = copied === ch.key;
+
           return (
             <Card
               key={ch.key}
@@ -241,40 +264,51 @@ export default function ContactSection({
               ].join(" ")}
               classNames={{ base: "overflow-visible" }}
             >
-              <CardHeader className="pb-2">
-                <div className="flex items-start gap-4">
-                  <div
-                    className={[
-                      "h-12 w-12 grid place-items-center rounded-xl ring-1",
-                      ch.accentClass,
-                    ].join(" ")}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <div className="min-w-0">
-                    <h3
-                      className={
-                        isDark
-                          ? "text-text font-semibold"
-                          : "text-gray-900 font-semibold"
-                      }
+              <AnimationTransitionWrapper
+                animation="slideUp"
+                duration={0.6}
+                staggerDelay={0.1}
+                threshold={0.05}
+              >
+                <CardHeader className="pb-2">
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={[
+                        "h-12 w-12 grid place-items-center rounded-xl ring-1",
+                        ch.accentClass,
+                      ].join(" ")}
                     >
-                      {ch.label}
-                    </h3>
-                    {ch.subtitle && (
-                      <p
+                      {typeof Icon === "function" ? (
+                        <Icon className={`h-6 w-6 ${iconCls}`} />
+                      ) : (
+                        <Icon className={`h-6 w-6 ${iconCls}`} />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <h3
                         className={
                           isDark
-                            ? "text-text-muted text-sm truncate"
-                            : "text-gray-600 text-sm truncate"
+                            ? "text-text font-semibold"
+                            : "text-gray-900 font-semibold"
                         }
                       >
-                        {ch.subtitle}
-                      </p>
-                    )}
+                        {ch.label}
+                      </h3>
+                      {ch.subtitle && (
+                        <p
+                          className={
+                            isDark
+                              ? "text-text-muted text-sm truncate"
+                              : "text-gray-600 text-sm truncate"
+                          }
+                        >
+                          {ch.subtitle}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
+                </CardHeader>
+              </AnimationTransitionWrapper>
 
               <CardBody className="pt-2">
                 <div className="flex gap-3">
@@ -296,7 +330,7 @@ export default function ContactSection({
                     <Button
                       isIconOnly
                       aria-label="Copy"
-                      className={isDark ? "bg-surface-soft" : "bg-brand-50"}
+                      className={"bg-brand-50"}
                       onPress={() => copy(ch.key, ch.copyValue)}
                     >
                       <ClipboardDocumentIcon className="h-5 w-5" />
