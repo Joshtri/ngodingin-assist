@@ -121,7 +121,7 @@ export default function FloatingWhatsAppButton({
     <>
       <div
         ref={rootRef}
-        className="fixed left-6 bottom-24 z-[9999] opacity-0 translate-y-4"
+        className="fixed right-6 bottom-10 z-[9999] opacity-0 translate-y-4"
       >
         <Button
           isIconOnly
