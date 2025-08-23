@@ -67,7 +67,7 @@ export default function FloatingScrollToTop() {
   return (
     <div
       ref={rootRef}
-      className="fixed right-6 bottom-24 z-[9999] opacity-0 translate-y-4"
+      className="fixed right-6 bottom-28 z-[9999] opacity-0 translate-y-4"
     >
       <div className="relative">
         {/* RING PROGRESS – selalu terlihat, di ATAS tombol */}
