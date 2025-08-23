@@ -19,6 +19,7 @@ const navItems = [
   { href: "#services", label: "Layanan" },
   { href: "#tech", label: "Teknologi" },
   { href: "#portfolio", label: "Portfolio" },
+  { href: "#product", label: "Produk" },
   { href: "#team", label: "Tim" },
   { href: "#pricing", label: "Harga" },
   { href: "#testimonials", label: "Testimoni" },
@@ -172,9 +173,9 @@ export default function CustomNavbar() {
               className={`rounded-md transition-all duration-500 ease-out ${
                 scrolled ? "scale-90" : "scale-100"
               }`}
-              height={scrolled ? 68 : 78} // ← DAN INI
+              height={scrolled ? 58 : 62} // ← DAN INI
               src="/ngodingin-512.png"
-              width={scrolled ? 68 : 78} // ← INI yang ngatur ukuran
+              width={scrolled ? 58 : 62} // ← INI yang ngatur ukuran
             />
             <span
               className={`text-xl font-bold tracking-tight text-white transition-all duration-500 ease-out overflow-hidden whitespace-nowrap ${

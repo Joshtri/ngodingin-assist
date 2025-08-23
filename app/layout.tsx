@@ -16,8 +16,9 @@ export const metadata: Metadata = {
 
   // description: siteConfig.description,
   icons: {
-    icon: "/ngodingin-favicon.ico",
+    icon: "/ngodingin-favicon-lts.png",
     apple: "/apple-touch-icon.png",
+    shortcut: "/ngodingin-favicon-lts.png",
   },
 };
 
