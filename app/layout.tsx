@@ -7,18 +7,19 @@ import { Providers } from "./providers";
 import Footer from "@/components/partials/Footer";
 import CustomNavbar from "@/components/partials/Navbar";
 import { fontSans } from "@/config/fonts";
-// import { Navbar } from "@/components/partials/Navbar";
 import FloatingScrollToTop from "@/components/common/FloatingScrollToTop";
 import FloatingWhatsAppButton from "@/components/common/FloatingWhatsAppButton";
+import SEOHead from "@/components/seo/SEOHead";
+import { constructMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Ngodingin",
-
-  // description: siteConfig.description,
-  icons: {
-    icon: "/ngodingin-favicon-lts.png",
-    apple: "/apple-touch-icon.png",
-    shortcut: "/ngodingin-favicon-lts.png",
+  ...constructMetadata({
+    title: "Ngodingin - Jasa Pembuatan Aplikasi Web & Mobile Profesional",
+    description: "Jasa pengembangan aplikasi web dan mobile profesional untuk tugas akhir mahasiswa. Spesialis dalam sistem informasi, e-learning, dan aplikasi custom dengan teknologi modern.",
+  }),
+  title: {
+    default: "Ngodingin - Jasa Pembuatan Aplikasi Web & Mobile Profesional",
+    template: "%s | Ngodingin",
   },
 };
 
@@ -35,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang="id">
       <head />
       <body
         className={clsx(
@@ -46,7 +47,7 @@ export default function RootLayout({
         <Providers>
           <div className="relative flex flex-col min-h-screen">
             <CustomNavbar />
-            <FloatingScrollToTop /> {/* muncul di semua page */}
+            <FloatingScrollToTop />
             <FloatingWhatsAppButton
               defaultContact={{
                 name: "Admin Ngodingin",
@@ -71,6 +72,13 @@ export default function RootLayout({
             <main className="flex-grow pt-16">{children}</main>
             <Footer />
           </div>
+          <SEOHead
+            structuredData={[
+              { type: "WebSite" },
+              { type: "Organization" },
+              { type: "Service" },
+            ]}
+          />
         </Providers>
       </body>
     </html>
