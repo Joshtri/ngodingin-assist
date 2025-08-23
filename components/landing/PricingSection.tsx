@@ -14,11 +14,13 @@ import {
   ModalHeader,
 } from "@heroui/react";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { siWhatsapp } from "simple-icons";
+
+import { GridBackground } from "../common/GridBackground";
+import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
+
 import SectionWrapper from "@/components/common/SectionWrapper";
 import GlowBlob from "@/components/common/GlowBlob";
-import { GridBackground } from "../common/GridBackground";
-import { siWhatsapp } from "simple-icons";
-import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 export type PricingPlan = {
   name: string;
@@ -57,9 +59,11 @@ type PricingSectionProps = {
 function normalizeIDPhone(raw: string) {
   // hapus spasi, tanda dll
   let x = (raw || "").replace(/[^\d+]/g, "");
+
   // +62... → 62..., 08... → 62...
   if (x.startsWith("+")) x = x.slice(1);
   if (x.startsWith("0")) x = "62" + x.slice(1);
+
   return x;
 }
 
@@ -121,43 +125,44 @@ export default function PricingSection({
   const openWhatsAppChat = (contact: WhatsAppContact, plan: PricingPlan) => {
     const num = normalizeIDPhone(contact.number);
     const text = encodeURIComponent(
-      `Halo! Saya tertarik dengan paket ${plan.name} seharga ${plan.price}. Bisakah Anda memberikan informasi lebih lanjut?`
+      `Halo! Saya tertarik dengan paket ${plan.name} seharga ${plan.price}. Bisakah Anda memberikan informasi lebih lanjut?`,
     );
+
     window.open(`https://wa.me/${num}?text=${text}`, "_blank");
     setIsContactModalOpen(false);
   };
 
   return (
     <SectionWrapper
+      descriptionClassName={sectionDescCls}
       id={id}
       title={title}
+      titleClassName={sectionTitleCls}
       description={description}
       // ✅ penting: bikin stacking context di parent
       className={`relative z-0 ${className}`}
-      titleClassName={sectionTitleCls}
-      descriptionClassName={sectionDescCls}
     >
       {/* Glow paling belakang */}
       {showGlow && (
         <div className="absolute inset-0 -z-10 pointer-events-none">
           <GlowBlob
-            position="top-right"
             colorClass="bg-brand-500/20"
+            position="top-right"
             size="h-[18rem] w-[18rem]"
           />
           <GlowBlob
-            position="bottom-left"
             colorClass="bg-accent-500/15"
+            position="bottom-left"
             size="h-[18rem] w-[18rem]"
           />
         </div>
       )}
 
       <GridBackground
-        size={50}
         majorEvery={3}
-        minorOpacity={0.07}
         majorOpacity={0.16}
+        minorOpacity={0.07}
+        size={50}
       />
 
       {/* Konten di atas particle (DOM order menang) */}
@@ -169,15 +174,15 @@ export default function PricingSection({
             <AnimationTransitionWrapper
               key={i}
               animation="blur"
-              duration={0.8}
               delay={0.2}
-              threshold={0.2}
+              duration={0.8}
               repeatOnEnter={true}
+              threshold={0.2}
             >
               <Card
                 key={i}
-                isPressable
                 disableRipple
+                isPressable
                 className={[
                   "relative flex h-full rounded-2xl shadow-card transition-transform duration-300 transform-gpu",
                   "data-[hover=true]:-translate-y-2 data-[pressed=true]:scale-[0.985]",
@@ -192,10 +197,10 @@ export default function PricingSection({
               >
                 {popular && (
                   <Chip
-                    variant="solid"
+                    className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white px-3 py-1 font-semibold shadow pointer-events-none z-10"
                     radius="full"
                     size="sm"
-                    className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white px-3 py-1 font-semibold shadow pointer-events-none z-10"
+                    variant="solid"
                   >
                     POPULER
                   </Chip>
@@ -245,20 +250,20 @@ export default function PricingSection({
 
                   {plan.ctaHref ? (
                     <a
-                      href={plan.ctaHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="block"
+                      href={plan.ctaHref}
+                      rel="noopener noreferrer"
+                      target="_blank"
                     >
                       <Button
                         fullWidth
-                        size="lg"
+                        aria-label={`Pilih ${plan.name}`}
                         className={
                           popular
                             ? "bg-brand-600 hover:bg-brand-700 text-white"
                             : "bg-brand-100 text-brand-700 hover:bg-brand-200"
                         }
-                        aria-label={`Pilih ${plan.name}`}
+                        size="lg"
                       >
                         {plan.ctaLabel ?? "Pilih Paket Ini"}
                       </Button>
@@ -266,25 +271,25 @@ export default function PricingSection({
                   ) : (
                     <Button
                       fullWidth
-                      size="lg"
+                      aria-label={`Pilih ${plan.name}`}
                       className={
                         popular
                           ? "bg-brand-600 hover:bg-brand-700 text-white"
                           : "bg-brand-100 text-brand-700 hover:bg-brand-200"
                       }
-                      onPress={() => handlePlanSelect(plan)}
-                      aria-label={`Pilih ${plan.name}`}
+                      size="lg"
                       startContent={
                         contacts.length > 0 && (
                           <svg
-                            width={20}
+                            dangerouslySetInnerHTML={{ __html: siWhatsapp.svg }}
+                            fill="currentColor"
                             height={20}
                             viewBox="0 0 24 24"
-                            fill="currentColor"
-                            dangerouslySetInnerHTML={{ __html: siWhatsapp.svg }}
+                            width={20}
                           />
                         )
                       }
+                      onPress={() => handlePlanSelect(plan)}
                     >
                       {plan.ctaLabel ?? "Pilih Paket Ini"}
                     </Button>
@@ -314,19 +319,19 @@ export default function PricingSection({
               {contacts.map((contact, index) => (
                 <Button
                   key={index}
-                  color="success"
-                  variant="flat"
                   className="justify-start px-4 py-6 text-left"
+                  color="success"
                   startContent={
                     <svg
-                      width={20}
+                      dangerouslySetInnerHTML={{ __html: siWhatsapp.svg }}
+                      className="text-green-600"
+                      fill="currentColor"
                       height={20}
                       viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="text-green-600"
-                      dangerouslySetInnerHTML={{ __html: siWhatsapp.svg }}
+                      width={20}
                     />
                   }
+                  variant="flat"
                   onPress={() =>
                     selectedPlan && openWhatsAppChat(contact, selectedPlan)
                   }
