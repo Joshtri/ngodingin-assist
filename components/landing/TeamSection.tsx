@@ -5,10 +5,7 @@ import { Card, CardBody, Avatar, Chip } from "@heroui/react";
 import { CodeBracketIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
 
 import ParticleBackground from "../common/ParticleBackground";
-import AnimationTransitionWrapper, {
-  StaggerContainer,
-  StaggerItem,
-} from "../common/AnimationTransitionWrapper";
+import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 import SectionWrapper from "@/components/common/SectionWrapper";
 import GlowBlob from "@/components/common/GlowBlob"; // optional, pakai yang sudah kita buat
@@ -178,17 +175,17 @@ export default function TeamSection({
             [SocialKeys, string]
           >;
           const visibleSocials = socialEntries.filter(
-            ([, url]) => typeof url === "string" && url.trim().length > 0
+            ([, url]) => typeof url === "string" && url.trim().length > 0,
           );
 
           return (
             <AnimationTransitionWrapper
               key={i}
               animation="slideUp"
-              duration={0.8}
               delay={0.2}
-              threshold={0.2}
+              duration={0.8}
               repeatOnEnter={true}
+              threshold={0.2}
             >
               <Card
                 key={i}
@@ -202,9 +199,6 @@ export default function TeamSection({
                       {/* Ring manual biar nggak kepotong */}
                       <div className="rounded-full p-[3px] bg-white/90 shadow-md">
                         <Avatar
-                          name={getInitials(m.name)}
-                          radius="full"
-                          src={m.image}
                           className="w-28 h-28"
                           classNames={{
                             base: "rounded-full bg-surface-soft text-text",
@@ -212,6 +206,9 @@ export default function TeamSection({
                             fallback: "rounded-full",
                             name: "rounded-full",
                           }}
+                          name={getInitials(m.name)}
+                          radius="full"
+                          src={m.image}
                         />
                       </div>
 
