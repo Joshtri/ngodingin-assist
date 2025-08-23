@@ -1,0 +1,15 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+
+# Host
+Host: https://ngodingin-assist-lxkh.vercel.app/
+
+# Sitemaps
+Sitemap: https://ngodingin-assist-lxkh.vercel.app//sitemap.xml
