@@ -11,19 +11,19 @@ const config = {
   theme: {
     extend: {
       colors: {
-        // Brand utama (ungu)
+        // Brand utama (midnight blue)
         brand: {
-          DEFAULT: "#F59E0B",
-          50: "#FFF7ED",
-          100: "#FFEDD5",
-          200: "#FED7AA",
-          300: "#FDBA74",
-          400: "#FB923C",
-          500: "#F59E0B",
-          600: "#D97706",
-          700: "#B45309",
-          800: "#92400E",
-          900: "#78350F",
+          DEFAULT: "#1E1B4B",
+          50: "#F8FAFC",
+          100: "#F1F5F9",
+          200: "#E2E8F0",
+          300: "#94A3B8",
+          400: "#64748B",
+          500: "#475569",
+          600: "#334155",
+          700: "#1E293B",
+          800: "#0F172A",
+          900: "#020617",
         },
 
         // Aksen (amber/kuning) buat badge/highlight
