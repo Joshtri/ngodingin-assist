@@ -69,7 +69,7 @@ export default function TestimonialsSection({
   const setupMarquee = (
     element: HTMLElement,
     direction: "up" | "down",
-    pxPerSec: number
+    pxPerSec: number,
   ) => {
     const originalHTML = element.innerHTML;
 
@@ -126,7 +126,7 @@ export default function TestimonialsSection({
       (el) => {
         el.style.willChange = "transform";
         (el.style as any).transform = "translate3d(0,0,0)";
-      }
+      },
     );
 
     let m1 = setupMarquee(column1Ref.current, "up", speed * 1.0);
@@ -154,7 +154,7 @@ export default function TestimonialsSection({
 
         ro.observe(el);
         ros.push(ro);
-      }
+      },
     );
 
     let resumeTimer: number | null = null;
@@ -186,7 +186,7 @@ export default function TestimonialsSection({
     if (pauseWhenHidden && containerRef.current) {
       io = new IntersectionObserver(
         ([entry]) => (entry.isIntersecting ? resumeAll() : pauseAll()),
-        { threshold: 0.001, rootMargin: "200px 0px 200px 0px" }
+        { threshold: 0.001, rootMargin: "200px 0px 200px 0px" },
       );
       io.observe(containerRef.current);
     }
@@ -277,8 +277,8 @@ export default function TestimonialsSection({
       <div className="max-w-7xl mx-auto relative">
         <AnimationTransitionWrapper
           animation="fade"
-          duration={0.8}
           delay={0.2}
+          duration={0.8}
           threshold={0.1}
         >
           <div className="text-center mb-16">
