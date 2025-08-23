@@ -13,17 +13,17 @@ const config = {
       colors: {
         // Brand utama (ungu)
         brand: {
-          DEFAULT: "#7C3AED",
-          50: "#F4E8FF",
-          100: "#E9D5FF",
-          200: "#D8B4FE",
-          300: "#C084FC",
-          400: "#A855F7",
-          500: "#8B5CF6",
-          600: "#7C3AED",
-          700: "#6D28D9",
-          800: "#5B21B6",
-          900: "#3B0764",
+          DEFAULT: "#F59E0B",
+          50: "#FFF7ED",
+          100: "#FFEDD5",
+          200: "#FED7AA",
+          300: "#FDBA74",
+          400: "#FB923C",
+          500: "#F59E0B",
+          600: "#D97706",
+          700: "#B45309",
+          800: "#92400E",
+          900: "#78350F",
         },
 
         // Aksen (amber/kuning) buat badge/highlight
