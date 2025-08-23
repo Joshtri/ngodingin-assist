@@ -1,96 +1,52 @@
-"use client";
+import { Metadata } from "next";
 
-import { useEffect, useState } from "react";
+import JsonLd from "@/components/seo/JsonLd";
+import LandingContent from "@/components/landing/LandingContent";
+import { constructMetadata, schemaOrgData } from "@/config/seo";
 
-// 👇 import semua data
-import ContactSection from "@/components/landing/ContactSection";
-import HeroSection from "@/components/landing/HeroSection";
-import PortfolioSection from "@/components/landing/PortfolioSection";
-import PricingSection from "@/components/landing/PricingSection";
-import ServicesSection from "@/components/landing/ServicesSection";
-import TeamSection from "@/components/landing/TeamSection";
-import TechnologyStackSection from "@/components/landing/TechnologyStackSection";
-import TestimonialsSection from "@/components/landing/TestimonialsSection";
-import {
-  portfolioItems,
-  pricingPlans,
-  productItems,
-  services,
-  teamMembers,
-  technologies,
-  testimonials,
-} from "@/data/landing";
-import ProductSection from "@/components/landing/ProductSection";
+export const metadata: Metadata = constructMetadata({
+  title: "Ngodingin - Jasa Pembuatan Aplikasi",
+  description:
+    "Jasa pembuatan aplikasi web untuk mahasiswa mulai Rp 1.5 juta. Tim developer berpengalaman, konsultasi gratis, teknologi modern. Hubungi tim Ngodingin sekarang!",
+  keywords: [
+    "harga ngodingin",
+    "biaya jasa skripsi",
+    "tim ngodingin",
+    "produk ngodingin",
+    "layanan ngodingin",
+    "jasa pembuatan aplikasi murah",
+    "developer indonesia",
+    "aplikasi web mahasiswa",
+    "konsultasi IT gratis",
+    "paket harga coding",
+  ],
+  canonicalUrl: "https://ngodingin-assist-lxkh.vercel.app/",
+});
 
 export default function DevAssistLanding() {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-
-      <HeroSection />
-
-      {/* Services Section */}
-      <ServicesSection services={services} />
-      {/* Technology Stack */}
-      <TechnologyStackSection technologies={technologies} />
-      {/* Portfolio Section */}
-      <PortfolioSection
-        description="Beberapa aplikasi yang telah kami kembangkan untuk tugas akhir mahasiswa."
-        items={portfolioItems}
-        title="Portfolio Kami"
-        variant="dark"
-        className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
-        // optional: override judul/desc kalau mau beda
-        // title="Portfolio Kami"
-        // description="Beberapa aplikasi ..."
+      <JsonLd data={schemaOrgData.service} />
+      <JsonLd data={schemaOrgData.faq} />
+      <JsonLd data={schemaOrgData.localBusiness} />
+      <JsonLd
+        data={schemaOrgData.breadcrumb([
+          { name: "Home", url: "https://ngodingin-assist-lxkh.vercel.app/" },
+          {
+            name: "Jasa Pembuatan Aplikasi",
+            url: "https://ngodingin-assist-lxkh.vercel.app//#services",
+          },
+          {
+            name: "Harga & Paket",
+            url: "https://ngodingin-assist-lxkh.vercel.app//#pricing",
+          },
+          {
+            name: "Tim Developer",
+            url: "https://ngodingin-assist-lxkh.vercel.app//#team",
+          },
+        ])}
       />
-
-      <ProductSection items={productItems} />
-
-      {/* Team Section */}
-      <TeamSection
-        className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
-        descriptionClassName="text-gray-300"
-        id="team"
-        members={teamMembers}
-        titleClassName="text-white"
-        variant="dark"
-      />
-      {/* Pricing Section */}
-      <PricingSection
-        className="bg-gradient-to-r from-surface-soft via-brand-900 to-surface"
-        plans={pricingPlans}
-        variant="dark"
-      />
-      {/* Testimonials */}
-      <TestimonialsSection
-        className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
-        items={testimonials}
-      />
-
-      <ContactSection
-        showGlow
-        className="bg-gradient-to-b from-surface-soft via-brand-900 to-surface"
-        email="ngodingin@protonmail.com"
-        instagram="ngodingin-assist"
-        variant="dark"
-        whatsapp={{
-          number: "0852-9838-9192",
-          prefilledText: "Halo, saya butuh bantuan untuk ngoding sistem 🙌",
-        }}
-      />
-
-      {/* CTA Section */}
+      <LandingContent />
     </div>
   );
 }
