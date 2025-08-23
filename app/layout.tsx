@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+
 import clsx from "clsx";
 import { Metadata, Viewport } from "next";
 
@@ -6,21 +7,14 @@ import { Providers } from "./providers";
 
 import Footer from "@/components/partials/Footer";
 import CustomNavbar from "@/components/partials/Navbar";
+import JsonLd from "@/components/seo/JsonLd";
 import { fontSans } from "@/config/fonts";
+import { constructMetadata, schemaOrgData } from "@/config/seo";
 // import { Navbar } from "@/components/partials/Navbar";
 import FloatingScrollToTop from "@/components/common/FloatingScrollToTop";
 import FloatingWhatsAppButton from "@/components/common/FloatingWhatsAppButton";
 
-export const metadata: Metadata = {
-  title: "Ngodingin",
-
-  // description: siteConfig.description,
-  icons: {
-    icon: "/ngodingin-favicon-lts.png",
-    apple: "/apple-touch-icon.png",
-    shortcut: "/ngodingin-favicon-lts.png",
-  },
-};
+export const metadata: Metadata = constructMetadata();
 
 export const viewport: Viewport = {
   themeColor: [
@@ -48,18 +42,12 @@ export default function RootLayout({
             <CustomNavbar />
             <FloatingScrollToTop /> {/* muncul di semua page */}
             <FloatingWhatsAppButton
-              defaultContact={{
-                name: "Admin Ngodingin",
-                number: "62812345678",
-                prefilledText:
-                  "Halo! Saya tertarik untuk konsultasi terkait tugas akhir.",
-              }}
               contacts={[
                 {
                   name: "Admin Ngodingin",
                   number: "62812345678",
                   prefilledText:
-                    "Halo! Saya tertarik untuk konsultasi terkait tugas akhir.",
+                    "Halo! Saya tertarik untuk konsultasi terkait pembuatan aplikasi.",
                 },
                 {
                   name: "Technical Support",
@@ -67,8 +55,16 @@ export default function RootLayout({
                   prefilledText: "Halo! Saya butuh bantuan teknis.",
                 },
               ]}
+              defaultContact={{
+                name: "Admin Ngodingin",
+                number: "62812345678",
+                prefilledText:
+                  "Halo! Saya tertarik untuk konsultasi terkait pembuatan aplikasi.",
+              }}
             />
             <main className="flex-grow pt-16">{children}</main>
+            <JsonLd data={schemaOrgData.website} />
+            <JsonLd data={schemaOrgData.organization} />
             <Footer />
           </div>
         </Providers>
