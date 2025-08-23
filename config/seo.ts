@@ -42,7 +42,7 @@ export function constructMetadata({
   title = siteConfig.name,
   description = siteConfig.description,
   image = siteConfig.ogImage,
-  icons = "/ngodingin-favicon-lts.png",
+  icons = "/ngodingin-favicon-lts.ico",
   noIndex = false,
   keywords = siteConfig.keywords,
   canonicalUrl,
