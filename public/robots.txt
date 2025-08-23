@@ -1,0 +1,23 @@
+# Robots.txt for Ngodingin
+# Generated for SEO optimization
+
+User-agent: *
+Allow: /
+
+# Allow crawling of important pages
+Allow: /about
+Allow: /pricing
+Allow: /blog
+Allow: /docs
+
+# Disallow admin and private areas (if any in future)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /_next/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://ngodingin.vercel.app/sitemap.xml
+
+# Crawl delay for better server performance
+Crawl-delay: 1

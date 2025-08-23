@@ -1,13 +1,15 @@
 // components/landing/ProductSection.tsx
 "use client";
 
-import SectionWrapper from "@/components/common/SectionWrapper";
-import { productItems } from "@/data/landing";
-import { ProductSectionProps } from "@/types";
 import { Card, CardBody, CardHeader, Chip } from "@heroui/react";
 import { motion } from "framer-motion";
+
 import GlowBlob from "../common/GlowBlob";
 import { GridBackground } from "../common/GridBackground";
+
+import { ProductSectionProps } from "@/types";
+import { productItems } from "@/data/landing";
+import SectionWrapper from "@/components/common/SectionWrapper";
 
 export default function ProductSection({
   id = "product",
@@ -31,50 +33,51 @@ export default function ProductSection({
 
   return (
     <SectionWrapper
+      className={`relative z-0 ${className}`}
+      description={description}
+      descriptionClassName="text-gray-300"
       id={id}
       title={title}
-      description={description}
-      className={`relative z-0 ${className}`}
       titleClassName="text-white"
-      descriptionClassName="text-gray-300"
     >
       {/* Glow background */}
       <div className="absolute inset-0 -z-20 pointer-events-none">
         <GlowBlob
-          position="top-right"
           colorClass="bg-brand-500/20"
+          position="top-right"
           size="h-[18rem] w-[18rem]"
         />
         <GlowBlob
-          position="bottom-left"
           colorClass="bg-accent-500/15"
+          position="bottom-left"
           size="h-[18rem] w-[18rem]"
         />
       </div>
 
       <GridBackground
-        size={50}
         majorEvery={3}
-        minorOpacity={0.07}
         majorOpacity={0.16}
+        minorOpacity={0.07}
+        size={50}
       />
 
       {/* Grid produk */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
         {items.map((item, index) => {
           const Icon = item.icon;
+
           return (
             <motion.div
               key={index}
+              className="h-full"
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: "-100px" }}
               transition={{
                 duration: 0.5,
                 delay: index * 0.1,
                 ease: [0.25, 0.1, 0.25, 1.0],
               }}
-              className="h-full"
+              viewport={{ once: false, margin: "-100px" }}
+              whileInView={{ opacity: 1, y: 0 }}
             >
               <Card
                 isPressable
@@ -109,10 +112,10 @@ export default function ProductSection({
                       {item.examples.map((example, i) => (
                         <Chip
                           key={i}
-                          size="sm"
-                          radius="sm"
-                          variant="flat"
                           className={chipCls}
+                          radius="sm"
+                          size="sm"
+                          variant="flat"
                         >
                           {example}
                         </Chip>

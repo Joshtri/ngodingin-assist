@@ -32,8 +32,6 @@ export type TeamMember = {
   socials?: Partial<Record<SocialKeys, string>>;
 };
 
-
-
 export type ProductItem = {
   title: string;
   description: string;

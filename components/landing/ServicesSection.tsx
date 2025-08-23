@@ -7,9 +7,9 @@ import { Card, CardHeader, CardBody } from "@heroui/react";
 
 import GlowBlob from "../common/GlowBlob";
 import ParticleBackground from "../common/ParticleBackground";
+import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 import SectionWrapper from "@/components/common/SectionWrapper";
-import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 export type ServiceItem = {
   title: string;
@@ -73,10 +73,10 @@ export default function ServicesSection({
             <AnimationTransitionWrapper
               key={i}
               animation="fade"
-              duration={0.8}
               delay={0.2}
-              threshold={0.2}
+              duration={0.8}
               repeatOnEnter={true}
+              threshold={0.2}
             >
               <Card
                 key={i}

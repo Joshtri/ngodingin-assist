@@ -1,8 +1,9 @@
 // components/sections/ContactSection.tsx
 "use client";
 
-import { useMemo, useState } from "react";
 import type { ElementType } from "react";
+
+import { useMemo, useState } from "react";
 import { Card, CardBody, CardHeader, Button, Chip } from "@heroui/react";
 import {
   PhoneIcon,
@@ -10,11 +11,13 @@ import {
   MapPinIcon,
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/outline";
+import { siWhatsapp, siTelegram, siInstagram } from "simple-icons";
+
+import { GridBackground } from "../common/GridBackground";
+import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
+
 import SectionWrapper from "@/components/common/SectionWrapper";
 import GlowBlob from "@/components/common/GlowBlob";
-import { GridBackground } from "../common/GridBackground";
-import { siWhatsapp, siTelegram, siInstagram } from "simple-icons";
-import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 type Variant = "light" | "dark";
 
@@ -51,9 +54,11 @@ type Channel = {
 function normalizeIDPhone(raw: string) {
   // hapus spasi, tanda dll
   let x = (raw || "").replace(/[^\d+]/g, "");
+
   // +62... → 62..., 08... → 62...
   if (x.startsWith("+")) x = x.slice(1);
   if (x.startsWith("0")) x = "62" + x.slice(1);
+
   return x;
 }
 
@@ -69,12 +74,12 @@ const SimpleIconWrapper = ({
 }) => {
   return (
     <svg
-      width={size}
+      dangerouslySetInnerHTML={{ __html: icon.svg }}
+      className={className}
+      fill="currentColor"
       height={size}
       viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      dangerouslySetInnerHTML={{ __html: icon.svg }}
+      width={size}
     />
   );
 };
@@ -120,8 +125,9 @@ export default function ContactSection({
       const num = normalizeIDPhone(whatsapp.number);
       const text = encodeURIComponent(
         whatsapp.prefilledText ??
-          "Halo! Saya tertarik untuk konsultasi terkait tugas akhir."
+          "Halo! Saya tertarik untuk konsultasi terkait tugas akhir.",
       );
+
       list.push({
         key: "whatsapp",
         label: whatsapp.label ?? "WhatsApp",
@@ -137,6 +143,7 @@ export default function ContactSection({
 
     if (phone) {
       const num = normalizeIDPhone(phone);
+
       list.push({
         key: "phone",
         label: "Telepon",
@@ -166,6 +173,7 @@ export default function ContactSection({
 
     if (telegram) {
       const user = telegram.replace(/^@/, "");
+
       list.push({
         key: "telegram",
         label: "Telegram",
@@ -181,6 +189,7 @@ export default function ContactSection({
 
     if (instagram) {
       const ig = instagram.replace(/^@/, "");
+
       list.push({
         key: "instagram",
         label: "Instagram",
@@ -200,7 +209,7 @@ export default function ContactSection({
         label: "Lokasi",
         subtitle: location,
         href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-          location
+          location,
         )}`,
         icon: MapPinIcon,
         accentClass: isDark
@@ -214,34 +223,34 @@ export default function ContactSection({
 
   return (
     <SectionWrapper
+      className={`relative z-0 ${className}`}
+      description={description}
+      descriptionClassName={descCls}
       id={id}
       title={title}
-      description={description}
-      className={`relative z-0 ${className}`}
       titleClassName={titleCls}
-      descriptionClassName={descCls}
     >
       {/* dekorasi opsional */}
       {showGlow && (
         <div className="absolute inset-0 -z-20 pointer-events-none">
           <GlowBlob
-            position="top-right"
             colorClass="bg-brand-500/20"
+            position="top-right"
             size="h-[18rem] w-[18rem]"
           />
           <GlowBlob
-            position="bottom-left"
             colorClass="bg-accent-500/15"
+            position="bottom-left"
             size="h-[18rem] w-[18rem]"
           />
         </div>
       )}
 
       <GridBackground
-        size={50}
         majorEvery={3}
-        minorOpacity={0.07}
         majorOpacity={0.16}
+        minorOpacity={0.07}
+        size={50}
       />
 
       {/* grid kanal */}
@@ -253,8 +262,8 @@ export default function ContactSection({
           return (
             <Card
               key={ch.key}
-              isPressable
               disableRipple
+              isPressable
               className={[
                 "relative h-full rounded-2xl shadow-card transition-transform duration-300 transform-gpu",
                 "data-[hover=true]:-translate-y-2 data-[pressed=true]:scale-[0.985]",
@@ -313,10 +322,10 @@ export default function ContactSection({
               <CardBody className="pt-2">
                 <div className="flex gap-3">
                   <a
-                    href={ch.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="flex-1"
+                    href={ch.href}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <Button
                       fullWidth
@@ -342,10 +351,10 @@ export default function ContactSection({
                 {isCopied && (
                   <div className="pt-3">
                     <Chip
-                      size="sm"
-                      radius="full"
-                      variant="flat"
                       className="bg-emerald-100 text-emerald-700"
+                      radius="full"
+                      size="sm"
+                      variant="flat"
                     >
                       Disalin!
                     </Chip>

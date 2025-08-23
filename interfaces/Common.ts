@@ -1,3 +1,3 @@
 interface test {
-    lol?: string;
+  lol?: string;
 }
