@@ -20,9 +20,9 @@ import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import GlowBlob from "../common/GlowBlob";
 import { GridBackground } from "../common/GridBackground";
+import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 import SectionWrapper from "@/components/common/SectionWrapper";
-import AnimationTransitionWrapper from "../common/AnimationTransitionWrapper";
 
 export type PortfolioItem = {
   title: string;
@@ -82,13 +82,16 @@ export default function PortfolioSection({
 
   useEffect(() => {
     const el = trackRef.current;
+
     if (!el) return;
 
     const setup = () => {
       const batchWidth = Math.round(el.scrollWidth / 2);
+
       if (!batchWidth) return;
 
       const wrapX = gsap.utils.wrap(-batchWidth, 0);
+
       gsap.set(el, { x: 0, force3D: true, willChange: "transform" });
       tweenRef.current?.kill();
       tweenRef.current = gsap.to(el, {
@@ -103,16 +106,18 @@ export default function PortfolioSection({
     };
 
     const ro = new ResizeObserver(setup);
+
     ro.observe(el);
 
     let io: IntersectionObserver | null = null;
+
     if (viewportRef.current) {
       io = new IntersectionObserver(
         ([e]) =>
           e.isIntersecting
             ? tweenRef.current?.resume()
             : tweenRef.current?.pause(),
-        { threshold: 0.01, rootMargin: "200px 0px 200px 0px" }
+        { threshold: 0.01, rootMargin: "200px 0px 200px 0px" },
       );
       io.observe(viewportRef.current);
     }
@@ -136,7 +141,7 @@ export default function PortfolioSection({
     dragInfo.current = {
       startX: e.pageX,
       scrollLeft: parseFloat(
-        trackRef.current.style.transform?.replace(/[^0-9\-\.]/g, "") || "0"
+        trackRef.current.style.transform?.replace(/[^0-9\-\.]/g, "") || "0",
       ),
     };
   };
@@ -148,7 +153,7 @@ export default function PortfolioSection({
     dragInfo.current = {
       startX: e.touches[0].pageX,
       scrollLeft: parseFloat(
-        trackRef.current.style.transform?.replace(/[^0-9\-\.]/g, "") || "0"
+        trackRef.current.style.transform?.replace(/[^0-9\-\.]/g, "") || "0",
       ),
     };
   };
@@ -200,17 +205,17 @@ export default function PortfolioSection({
   const CardInner = (
     item: PortfolioItem,
     index: number,
-    isInModal: boolean = false
+    isInModal: boolean = false,
   ) => {
     const baseIdx = index % items.length;
     const body = (
       <AnimationTransitionWrapper
         key={index}
         animation="slideLeft"
-        duration={0.8}
         delay={0.2}
-        threshold={0.2}
+        duration={0.8}
         repeatOnEnter={true}
+        threshold={0.2}
       >
         <Card
           isPressable
@@ -310,9 +315,6 @@ export default function PortfolioSection({
       className={`relative ${className}`}
       description={description}
       descriptionClassName={isDark ? "text-gray-300" : "text-gray-600"}
-      id={id}
-      title={title}
-      titleClassName={isDark ? "text-white" : "text-gray-900"}
       headerActions={
         <div className="flex justify-center relative z-10">
           <Button
@@ -328,6 +330,9 @@ export default function PortfolioSection({
           </Button>
         </div>
       }
+      id={id}
+      title={title}
+      titleClassName={isDark ? "text-white" : "text-gray-900"}
     >
       <GlowBlob colorClass="bg-brand-600/10" position="top-right" />
       <GlowBlob colorClass="bg-brand-800/10" position="bottom-left" />
@@ -371,15 +376,15 @@ export default function PortfolioSection({
 
       {/* Lightbox Modal for Image Preview */}
       <Modal
-        isOpen={!!lightboxImage}
-        onClose={() => setLightboxImage(null)}
-        size="full"
-        className="bg-black/90 backdrop-blur-md"
         hideCloseButton
+        className="bg-black/90 backdrop-blur-md"
         classNames={{
           base: "bg-black/90",
           backdrop: "bg-black/80",
         }}
+        isOpen={!!lightboxImage}
+        size="full"
+        onClose={() => setLightboxImage(null)}
       >
         <ModalContent className="bg-transparent shadow-none max-w-none max-h-none m-0 rounded-none">
           {(onClose) => (
@@ -419,11 +424,11 @@ export default function PortfolioSection({
 
       {/* Responsive Modal for viewing all portfolio items */}
       <Modal
+        className="max-w-7xl mx-auto rounded-2xl"
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
         scrollBehavior="inside"
         size="xl"
-        className="max-w-7xl mx-auto rounded-2xl"
+        onClose={() => setIsModalOpen(false)}
       >
         <ModalContent>
           {(onClose) => (
