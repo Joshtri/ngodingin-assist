@@ -56,6 +56,7 @@ export default function PortfolioSection({
   const isDark = variant === "dark";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [lightboxTitle, setLightboxTitle] = useState<string>("");
 
   const cardBase = isDark
     ? "bg-surface-card/95 backdrop-blur border border-surface-line/30 text-text hover:border-brand-400/60 hover:shadow-brand-400/15"
@@ -223,6 +224,7 @@ export default function PortfolioSection({
                 e.preventDefault();
                 e.stopPropagation();
                 setLightboxImage(item.image || "/placeholder.svg");
+                setLightboxTitle(item.title);
               }}
             >
               <Image
@@ -372,7 +374,10 @@ export default function PortfolioSection({
       {/* Lightbox Modal for Image Preview */}
       <Modal
         isOpen={!!lightboxImage}
-        onClose={() => setLightboxImage(null)}
+        onClose={() => {
+          setLightboxImage(null);
+          setLightboxTitle("");
+        }}
         size="full"
         className="bg-black/90 backdrop-blur-md"
         hideCloseButton
@@ -404,7 +409,7 @@ export default function PortfolioSection({
               >
                 <div className="relative max-w-[90vw] max-h-[90vh]">
                   <Image
-                    alt="Portfolio preview"
+                    alt={`Preview layar penuh dari project ${lightboxTitle}`}
                     className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
                     height={1080}
                     src={lightboxImage || "/placeholder.svg"}
