@@ -50,20 +50,23 @@ export default function FloatingWhatsAppButton({
         duration: 0.4,
         ease: "power2.out",
         delay: 1.5,
-      }
+      },
     );
 
     // Hide when scroll position is at the contact section
     const onScroll = () => {
       const contactSection = document.getElementById("contact");
+
       if (contactSection) {
         const rect = contactSection.getBoundingClientRect();
+
         // Hide when contact section is in view
         setVisible(rect.top > window.innerHeight || rect.bottom < 0);
       }
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
@@ -87,7 +90,7 @@ export default function FloatingWhatsAppButton({
     const num = normalizeIDPhone(selectedContact.number);
     const text = encodeURIComponent(
       selectedContact.prefilledText ??
-        "Halo! Saya tertarik untuk konsultasi terkait tugas akhir."
+        "Halo! Saya tertarik untuk konsultasi terkait tugas akhir.",
     );
 
     window.open(`https://wa.me/${num}?text=${text}`, "_blank");
@@ -106,9 +109,11 @@ export default function FloatingWhatsAppButton({
   function normalizeIDPhone(raw: string) {
     // hapus spasi, tanda dll
     let x = (raw || "").replace(/[^\d+]/g, "");
+
     // +62... → 62..., 08... → 62...
     if (x.startsWith("+")) x = x.slice(1);
     if (x.startsWith("0")) x = "62" + x.slice(1);
+
     return x;
   }
 
@@ -120,25 +125,25 @@ export default function FloatingWhatsAppButton({
       >
         <Button
           isIconOnly
-          radius="full"
-          onPress={handleClick}
           aria-label="Chat dengan WhatsApp"
           className="relative z-10 w-14 h-14 bg-green-600 text-white shadow-lg active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 hover:bg-green-700"
+          radius="full"
+          onPress={handleClick}
         >
           <svg
-            width={28}
+            dangerouslySetInnerHTML={{ __html: siWhatsapp.svg }}
+            fill="currentColor"
             height={28}
             viewBox="0 0 24 24"
-            fill="currentColor"
-            dangerouslySetInnerHTML={{ __html: siWhatsapp.svg }}
+            width={28}
           />
         </Button>
       </div>
 
       <Modal
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
         placement="center"
+        onClose={() => setIsOpen(false)}
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
@@ -149,19 +154,19 @@ export default function FloatingWhatsAppButton({
               {contacts.map((contact, index) => (
                 <Button
                   key={index}
-                  color="success"
-                  variant="flat"
                   className="justify-start px-4 py-6 text-left"
+                  color="success"
                   startContent={
                     <svg
-                      width={20}
+                      dangerouslySetInnerHTML={{ __html: siWhatsapp.svg }}
+                      className="text-green-600"
+                      fill="currentColor"
                       height={20}
                       viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="text-green-600"
-                      dangerouslySetInnerHTML={{ __html: siWhatsapp.svg }}
+                      width={20}
                     />
                   }
+                  variant="flat"
                   onPress={() => openWhatsApp(contact)}
                 >
                   <div>

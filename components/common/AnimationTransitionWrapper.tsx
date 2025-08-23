@@ -130,11 +130,11 @@ export const StaggerContainer = ({
 }) => {
   return (
     <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ threshold: 0.1, once: false }}
-      transition={{ staggerChildren: staggerDelay }}
       className={className}
+      initial="hidden"
+      transition={{ staggerChildren: staggerDelay }}
+      viewport={{ threshold: 0.1, once: false }}
+      whileInView="visible"
       {...props}
     >
       {children}
@@ -158,12 +158,12 @@ export const StaggerItem = ({
 
   return (
     <motion.div
-      variants={variants}
+      className={className}
       transition={{
         duration,
         ease: [0.25, 0.1, 0.25, 1],
       }}
-      className={className}
+      variants={variants}
     >
       {children}
     </motion.div>
