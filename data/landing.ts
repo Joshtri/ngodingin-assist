@@ -41,13 +41,8 @@ import {
   siVite,
   siJsonwebtokens,
 } from "simple-icons";
+import { ChartBarIcon } from "@heroicons/react/24/outline";
 
-
-import {
-  ChartBarIcon,
-  ShieldCheckIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
 import { ProductItem, TeamMember, TechItem } from "@/types";
 export type IconType = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -64,43 +59,43 @@ export const services: {
   title: string;
   description: string;
 }[] = [
-    {
-      icon: CodeBracketIcon,
-      title: "Pembuatan Aplikasi Multiplatform",
-      description:
-        "Kami buatkan aplikasi untuk tugas akhir Anda dengan teknologi terkini yang bisa berjalan di berbagai platform (Android, iOS, Web).",
-    },
-    {
-      icon: AcademicCapIcon,
-      title: "Bimbingan Step-by-Step",
-      description:
-        "Kami jelaskan alur pembuatan aplikasi Anda secara detail, sehingga Anda bisa mempresentasikan dengan percaya diri di depan dosen.",
-    },
-    {
-      icon: DocumentTextIcon,
-      title: "Dokumentasi Lengkap",
-      description:
-        "Kami sediakan dokumentasi lengkap termasuk laporan, diagram UML, dan panduan penggunaan untuk memudahkan Anda.",
-    },
-    {
-      icon: ServerIcon,
-      title: "Backend & API Development",
-      description:
-        "Kami bangun sistem backend yang scalable dengan teknologi modern seperti Node.js, Laravel, atau Firebase.",
-    },
-    {
-      icon: DevicePhoneMobileIcon,
-      title: "UI/UX Modern",
-      description:
-        "Desain antarmuka yang user-friendly dan modern untuk meningkatkan nilai plus aplikasi Anda.",
-    },
-    {
-      icon: ChatBubbleLeftRightIcon,
-      title: "Support 24/7",
-      description:
-        "Tim support kami siap membantu Anda kapan saja, termasuk revisi mendadak sebelum sidang.",
-    },
-  ];
+  {
+    icon: CodeBracketIcon,
+    title: "Pembuatan Aplikasi Multiplatform",
+    description:
+      "Kami buatkan aplikasi untuk tugas akhir Anda dengan teknologi terkini yang bisa berjalan di berbagai platform (Android, iOS, Web).",
+  },
+  {
+    icon: AcademicCapIcon,
+    title: "Bimbingan Step-by-Step",
+    description:
+      "Kami jelaskan alur pembuatan aplikasi Anda secara detail, sehingga Anda bisa mempresentasikan dengan percaya diri di depan dosen.",
+  },
+  {
+    icon: DocumentTextIcon,
+    title: "Dokumentasi Lengkap",
+    description:
+      "Kami sediakan dokumentasi lengkap termasuk laporan, diagram UML, dan panduan penggunaan untuk memudahkan Anda.",
+  },
+  {
+    icon: ServerIcon,
+    title: "Backend & API Development",
+    description:
+      "Kami bangun sistem backend yang scalable dengan teknologi modern seperti Node.js, Laravel, atau Firebase.",
+  },
+  {
+    icon: DevicePhoneMobileIcon,
+    title: "UI/UX Modern",
+    description:
+      "Desain antarmuka yang user-friendly dan modern untuk meningkatkan nilai plus aplikasi Anda.",
+  },
+  {
+    icon: ChatBubbleLeftRightIcon,
+    title: "Support 24/7",
+    description:
+      "Tim support kami siap membantu Anda kapan saja, termasuk revisi mendadak sebelum sidang.",
+  },
+];
 
 export const technologies: TechItem[] = [
   { name: "JavaScript", icon: siJavascript },
@@ -352,7 +347,14 @@ export const teamMembers: TeamMember[] = [
     role: "Frontend Developer",
     description:
       "Spesialis antarmuka pengguna dengan keahlian dalam membuat desain yang intuitif dan sistem backend yang scalable.",
-    skills: ["React", "TailwindCSS", "DaisyUI", "Node.js", "Next.JS", "ShadcnUI"],
+    skills: [
+      "React",
+      "TailwindCSS",
+      "DaisyUI",
+      "Node.js",
+      "Next.JS",
+      "ShadcnUI",
+    ],
     image: "https://avatars.githubusercontent.com/u/172507739?v=4",
     socials: {
       github: "https://github.com/Anthasss",
@@ -362,8 +364,6 @@ export const teamMembers: TeamMember[] = [
     },
   },
 ];
-
-
 
 export const productItems: ProductItem[] = [
   {
