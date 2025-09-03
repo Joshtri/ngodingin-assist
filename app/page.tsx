@@ -20,7 +20,7 @@ export const metadata: Metadata = constructMetadata({
     "konsultasi IT gratis",
     "paket harga coding",
   ],
-  canonicalUrl: "https://ngodingin-assist-lxkh.vercel.app/",
+  canonicalUrl: "https://www.ngodingin-assist.tech",
 });
 
 export default function DevAssistLanding() {
@@ -31,18 +31,18 @@ export default function DevAssistLanding() {
       <JsonLd data={schemaOrgData.localBusiness} />
       <JsonLd
         data={schemaOrgData.breadcrumb([
-          { name: "Home", url: "https://ngodingin-assist-lxkh.vercel.app/" },
+          { name: "Home", url: "https://www.ngodingin-assist.tech" },
           {
             name: "Jasa Pembuatan Aplikasi",
-            url: "https://ngodingin-assist-lxkh.vercel.app//#services",
+            url: "https://www.ngodingin-assist.tech/#services",
           },
           {
             name: "Harga & Paket",
-            url: "https://ngodingin-assist-lxkh.vercel.app//#pricing",
+            url: "https://www.ngodingin-assist.tech/#pricing",
           },
           {
             name: "Tim Developer",
-            url: "https://ngodingin-assist-lxkh.vercel.app//#team",
+            url: "https://www.ngodingin-assist.tech/#team",
           },
         ])}
       />

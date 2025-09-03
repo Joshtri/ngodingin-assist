@@ -14,8 +14,7 @@ Disallow: /blog
 Disallow: /docs
 
 # Host
-Host: https://ngodingin-assist-lxkh.vercel.app/
+Host: https://www.ngodingin-assist.tech
 
 # Sitemaps
-Sitemap: https://ngodingin-assist-lxkh.vercel.app/sitemap.xml
-Sitemap: https://ngodingin-assist-lxkh.vercel.app//sitemap.xml
+Sitemap: https://www.ngodingin-assist.tech/sitemap.xml

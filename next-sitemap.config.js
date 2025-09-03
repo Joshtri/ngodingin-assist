@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || "https://ngodingin-assist-lxkh.vercel.app/",
+  siteUrl: process.env.SITE_URL || "https://www.ngodingin-assist.tech",
   generateRobotsTxt: true,
   sitemapSize: 7000,
   changefreq: "daily",
@@ -37,9 +37,7 @@ module.exports = {
         ],
       },
     ],
-    additionalSitemaps: [
-      "https://ngodingin-assist-lxkh.vercel.app//sitemap.xml",
-    ],
+    additionalSitemaps: ["https://www.ngodingin-assist.tech/sitemap.xml"],
   },
 
   // Transform function to customize URLs

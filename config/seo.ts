@@ -4,7 +4,7 @@ export const siteConfig = {
   name: "Ngodingin",
   description:
     "Jasa pembuatan aplikasi web untuk tugas akhir mahasiswa. Konsultasi gratis untuk skripsi, thesis, dan project akhir dengan teknologi modern.",
-  url: "https://ngodingin-assist-lxkh.vercel.app/",
+  url: "https://www.ngodingin-assist.tech",
   ogImage: "/og-image.png",
   keywords: [
     "jasa skripsi",
@@ -234,7 +234,7 @@ export const schemaOrgData = {
   localBusiness: {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": "https://ngodingin-assist-lxkh.vercel.app/",
+    "@id": "https://www.ngodingin-assist.tech",
     name: siteConfig.name,
     description: siteConfig.description,
     url: siteConfig.url,
