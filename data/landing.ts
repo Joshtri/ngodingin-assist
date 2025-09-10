@@ -224,7 +224,7 @@ export const pricingPlans: PricingPlan[] = [
     popular: false,
   },
   {
-    name: "Paket Standard",
+    name: "Paket Pro",
     price: "Mulai Rp 3,0 jt (± Rp 500rb)",
     description:
       "Solusi lengkap untuk mayoritas tugas akhir: 2 platform + backend dasar, batas fitur jelas, dan pendampingan.",
