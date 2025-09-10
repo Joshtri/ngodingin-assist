@@ -173,9 +173,9 @@ export default function CustomNavbar() {
               className={`rounded-md transition-all duration-500 ease-out ${
                 scrolled ? "scale-90" : "scale-100"
               }`}
-              height={scrolled ? 58 : 62} // ← DAN INI
-              src="/ngodingin-512.png"
-              width={scrolled ? 58 : 62} // ← INI yang ngatur ukuran
+              height={scrolled ? 58 : 60} // ← DAN INI
+              src="/lts-logo.png"
+              width={scrolled ? 58 : 60} // ← INI yang ngatur ukuran
             />
             <span
               className={`text-xl font-bold tracking-tight text-white transition-all duration-500 ease-out overflow-hidden whitespace-nowrap ${

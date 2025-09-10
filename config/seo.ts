@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 
 export const siteConfig = {
-  name: "Ngodingin",
+  name: "Ngodingin Assist",
   description:
     "Jasa pembuatan aplikasi web untuk tugas akhir mahasiswa. Konsultasi gratis untuk skripsi, thesis, dan project akhir dengan teknologi modern.",
   url: "https://www.ngodingin-assist.tech",
-  ogImage: "/og-image.png",
+  ogImage: "https://www.ngodingin-assist.tech/og-image.png",
   keywords: [
     "jasa skripsi",
     "tugas akhir",
@@ -42,7 +42,7 @@ export function constructMetadata({
   title = siteConfig.name,
   description = siteConfig.description,
   image = siteConfig.ogImage,
-  icons = "/ngodingin-favicon-lts.ico",
+  icons = "/favicon-32x32.png",
   noIndex = false,
   keywords = siteConfig.keywords,
   canonicalUrl,
@@ -72,6 +72,14 @@ export function constructMetadata({
     alternates: {
       canonical: url,
     },
+    other: {
+      "og:image:secure_url": image,
+      "og:image:type": "image/png",
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      "whatsapp:image": image,
+      "telegram:image": image,
+    },
     openGraph: {
       type: "website",
       locale: siteConfig.locale,
@@ -84,7 +92,8 @@ export function constructMetadata({
           url: image,
           width: 1200,
           height: 630,
-          alt: title,
+          alt: `${title} - ${siteConfig.name}`,
+          type: "image/png",
         },
       ],
     },
@@ -92,8 +101,13 @@ export function constructMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [image],
-      creator: "@ngodingin",
+      images: [
+        {
+          url: image,
+          alt: `${title} - ${siteConfig.name}`,
+        },
+      ],
+      creator: "@ngodingin_assist",
     },
     icons: {
       icon: icons,
